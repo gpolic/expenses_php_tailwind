@@ -1,6 +1,6 @@
 # Expenses PHP Tailwind
 
-A web application for tracking personal expenses built with PHP and styled with Tailwind CSS. This application uses a MySQL database hosted on Aiven.io.
+A mobile friendly web application for tracking personal expenses built with PHP and styled with Tailwind CSS. This application uses a MySQL database hosted on Aiven.io.
 
 ## Prerequisites
 
@@ -20,6 +20,8 @@ git clone https://github.com/gpolic/expenses_php_tailwind.git
 3. Configure your database connection (see Database Configuration section below).
 
 4. Deploy to your web server or run locally
+
+5. In case there are many categories setup in the DB, shorten your default category list by updating 'app_record.php' for $defaultCategories with your prefered category IDs 
 
 ## Database Configuration
 
