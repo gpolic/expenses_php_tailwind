@@ -36,3 +36,5 @@ This application uses Aiven.io for MySQL database hosting. To configure your dat
    - Download the SSL certificate (ca.pem) from the Overview page of your service
 
 3. Create a `config.php` file in the root directory with the indicated structure
+
+4. Create your user directly on the database with SQL command "INSERT into users values (1,'username','password_hash')". The password hash can be found with "$hashedPassword = password_hash('your_password', PASSWORD_DEFAULT);"
