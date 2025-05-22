@@ -91,9 +91,9 @@ try {
 
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
-                    <input type="number" step="1" name="amount" 
-                           value="<?php echo round($expense['ExpenseAmount']); ?>"
-                           class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                    <input type="number" step="0.01" name="amount" 
+                        value="<?php echo htmlspecialchars($expense['ExpenseAmount']); ?>"
+                        class="shadow border rounded w-full py-2 px-3 text-gray-700">
                 </div>
 
                 <div>
