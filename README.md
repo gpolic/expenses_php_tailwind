@@ -25,7 +25,7 @@ git clone https://github.com/gpolic/expenses_php_tailwind.git
 
 ## Database Configuration
 
-This application uses Aiven.io for MySQL database hosting. To configure your database connection:
+This application uses Aiven.io as MySQL cloud database. To configure your database connection:
 
 1. Create a MySQL database service on [Aiven.io](https://aiven.io/)
 
@@ -39,4 +39,6 @@ This application uses Aiven.io for MySQL database hosting. To configure your dat
 
 3. Create a `config.php` file in the root directory with the indicated structure
 
-4. Create your user directly on the database with SQL command "INSERT into users values (1,'username','password_hash')". The password hash can be found with "$hashedPassword = password_hash('your_password', PASSWORD_DEFAULT);"
+4. Setup your server with all application files. Open your web site URL and login with admin/admin 
+
+5. Create your user directly on the database with SQL command "INSERT into users values (1,'username','password_hash')". The password hash can be found with   "$hashedPassword = password_hash('your_password', PASSWORD_DEFAULT);"

@@ -30,4 +30,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Insert default admin user (username: admin, password: admin)
+INSERT INTO `users` (`username`, `password`) VALUES ('admin', '$2y$10$6oivHQdwPE/09uTnjU9z5O1WAP2IijiKGPePh9NHU2vTX2GHz4C26');
+
 
