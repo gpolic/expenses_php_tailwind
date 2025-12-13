@@ -41,4 +41,4 @@ This application uses Aiven.io as MySQL cloud database. To configure your databa
 
 4. Setup your server with all application files. Open your web site URL and login with admin/admin 
 
-5. Create your user directly on the database with SQL command "INSERT into users values (1,'username','password_hash')". The password hash can be found with   "$hashedPassword = password_hash('your_password', PASSWORD_DEFAULT);"
+5. Login using admin/admin. 
