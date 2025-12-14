@@ -57,11 +57,15 @@ try {
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Expenses Tracker</h1>
         <div class="flex gap-2 w-full sm:w-auto">
-          <a href="add_record.php" 
+          <a href="add_record.php"
           class="flex-1 sm:flex-none bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
             Add Record
           </a>
-          <a href="logout.php" 
+          <a href="reports.php"
+          class="flex-1 sm:flex-none bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+            Reports
+          </a>
+          <a href="logout.php"
           class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
             Logout
           </a>
