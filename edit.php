@@ -103,8 +103,8 @@ try {
 
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
-                    <input type="number" step="0.01" name="amount" 
-                        value="<?php echo htmlspecialchars($expense['ExpenseAmount']); ?>"
+                    <input type="number" step="0.01" name="amount"
+                        value="<?php echo htmlspecialchars(fmod($expense['ExpenseAmount'], 1) == 0 ? intval($expense['ExpenseAmount']) : number_format($expense['ExpenseAmount'], 2, '.', '')); ?>"
                         class="shadow border rounded w-full py-2 px-3 text-gray-700">
                 </div>
 
