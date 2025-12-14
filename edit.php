@@ -4,7 +4,7 @@ require_once 'session_check.php';
   
 if (isset($_POST['delete'])) {
     try {
-        $stmt = $pdo->prepare("DELETE FROM expense WHERE ExpenseID = :id");
+        $stmt = $pdo->prepare("DELETE FROM expenses WHERE expense_id = :id");
         $stmt->execute([':id' => $_POST['id']]);
         header("Location: index.php");
         exit();
@@ -16,12 +16,12 @@ if (isset($_POST['delete'])) {
   
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $sql = "UPDATE expense SET 
-                ExpenseAmount = :amount, 
-                ExpenseDate = :date, 
-                ExpenseDescr = :description,
-                CategID = :category
-                WHERE ExpenseID = :id";
+        $sql = "UPDATE expenses SET
+                expense_amount = :amount,
+                created_at = :date,
+                expense_description = :description,
+                category_id = :category
+                WHERE expense_id = :id";
                 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -41,25 +41,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 try {
     // Fetch expense details
-    $stmt = $pdo->prepare("SELECT e.*, c.categDescr FROM expense e
-            JOIN expensetype c ON e.CategID = c.categID
-            WHERE e.ExpenseID = :id");
+    $stmt = $pdo->prepare("SELECT e.*, c.category_name FROM expenses e
+            JOIN expense_categories c ON e.category_id = c.category_id
+            WHERE e.expense_id = :id");
     $stmt->execute([':id' => $_GET['id']]);
     $expense = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Fetch categories for dropdown
-    $categories = $pdo->query("SELECT * FROM expensetype");
+    $categories = $pdo->query("SELECT * FROM expense_categories");
     
     // Fetch top 3 descriptions for this category
     $stmt = $pdo->prepare("
-        SELECT ExpenseDescr, COUNT(*) as count
-        FROM expense
-        WHERE CategID = :category
-        GROUP BY ExpenseDescr
+        SELECT expense_description, COUNT(*) as count
+        FROM expenses
+        WHERE category_id = :category
+        GROUP BY expense_description
         ORDER BY count DESC
         LIMIT 3
     ");
-    $stmt->execute([':category' => $expense['CategID']]);
+    $stmt->execute([':category' => $expense['category_id']]);
     $topDescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch(PDOException $e) {
     die("Query failed: " . $e->getMessage());
@@ -87,15 +87,15 @@ try {
         
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
             <form method="POST" class="space-y-4" id="expenseForm">
-                <input type="hidden" name="id" value="<?php echo $expense['ExpenseID']; ?>">
+                <input type="hidden" name="id" value="<?php echo $expense['expense_id']; ?>">
                 
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Category</label>
                     <select name="category" class="shadow border rounded w-full py-2 px-3 text-gray-700">
                         <?php while($category = $categories->fetch(PDO::FETCH_ASSOC)) { ?>
-                            <option value="<?php echo $category['categID']; ?>" 
-                                    <?php echo ($category['categID'] == $expense['CategID']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($category['categDescr']); ?>
+                            <option value="<?php echo $category['category_id']; ?>"
+                                    <?php echo ($category['category_id'] == $expense['category_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($category['category_name']); ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -104,21 +104,21 @@ try {
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
                     <input type="number" step="0.01" name="amount"
-                        value="<?php echo htmlspecialchars(fmod($expense['ExpenseAmount'], 1) == 0 ? intval($expense['ExpenseAmount']) : number_format($expense['ExpenseAmount'], 2, '.', '')); ?>"
+                        value="<?php echo htmlspecialchars(fmod($expense['expense_amount'], 1) == 0 ? intval($expense['expense_amount']) : number_format($expense['expense_amount'], 2, '.', '')); ?>"
                         class="shadow border rounded w-full py-2 px-3 text-gray-700">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Date</label>
-                    <input type="datetime-local" name="date" 
-                           value="<?php echo date('Y-m-d\TH:i', strtotime($expense['ExpenseDate'])); ?>"
+                    <input type="datetime-local" name="date"
+                           value="<?php echo date('Y-m-d\TH:i', strtotime($expense['created_at'])); ?>"
                            class="shadow border rounded w-full py-2 px-3 text-gray-700">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
                     <input type="text" name="description"
-                           value="<?php echo htmlspecialchars($expense['ExpenseDescr']); ?>"
+                           value="<?php echo htmlspecialchars($expense['expense_description']); ?>"
                            id="description"
                            class="shadow border rounded w-full py-2 px-3 text-gray-700">
                 </div>
@@ -128,9 +128,9 @@ try {
                     <div class="flex flex-wrap gap-2">
                         <?php foreach($topDescriptions as $desc) { ?>
                             <button type="button"
-                                    onclick="setDescription('<?php echo htmlspecialchars($desc['ExpenseDescr']); ?>')"
+                                    onclick="setDescription('<?php echo htmlspecialchars($desc['expense_description']); ?>')"
                                     class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded text-sm">
-                                <?php echo htmlspecialchars($desc['ExpenseDescr']); ?>
+                                <?php echo htmlspecialchars($desc['expense_description']); ?>
                             </button>
                         <?php } ?>
                     </div>
@@ -157,7 +157,7 @@ try {
 
             <!-- Hidden delete form -->
             <form id="deleteForm" method="POST" class="hidden">
-                <input type="hidden" name="id" value="<?php echo $expense['ExpenseID']; ?>">
+                <input type="hidden" name="id" value="<?php echo $expense['expense_id']; ?>">
                 <input type="hidden" name="delete" value="1">
             </form>
         </div>

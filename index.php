@@ -8,10 +8,10 @@ try {
     $currentMonth = date('m');
     $currentYear = date('Y');
     
-    $monthlyTotalSql = "SELECT SUM(ExpenseAmount) as monthTotal
-                        FROM expense
-                        WHERE MONTH(ExpenseDate) = :month
-                        AND YEAR(ExpenseDate) = :year";
+    $monthlyTotalSql = "SELECT SUM(expense_amount) as monthTotal
+                        FROM expenses
+                        WHERE MONTH(created_at) = :month
+                        AND YEAR(created_at) = :year";
     
     $stmt = $pdo->prepare($monthlyTotalSql);
     $stmt->execute([
@@ -27,10 +27,10 @@ try {
 
 try {
     // Fetch last 50 expense records with category descriptions
-  $sql = "SELECT e.*, et.categDescr
-    FROM expense e
-    JOIN expensetype et ON e.CategID = et.categID
-    ORDER BY e.ExpenseDate DESC
+  $sql = "SELECT e.*, ec.category_name
+    FROM expenses e
+    JOIN expense_categories ec ON e.category_id = ec.category_id
+    ORDER BY e.created_at DESC
     LIMIT 50";
             
     $stmt = $pdo->query($sql);
@@ -98,19 +98,19 @@ try {
             <?php while($row = $stmt->fetch(PDO::FETCH_ASSOC)) { ?>
             <tr class="hover:bg-gray-50">
               <td class="px-2 sm:px-6 py-4 text-sm">
-                <?php echo htmlspecialchars(date('d/m/Y', strtotime($row['ExpenseDate']))); ?>
+                <?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?>
               </td>
               <td class="px-2 sm:px-6 py-4 text-sm">
-                <?php echo htmlspecialchars($row['categDescr']); ?>
+                <?php echo htmlspecialchars($row['category_name']); ?>
               </td>
               <td class="px-2 sm:px-6 py-4 text-sm text-right">
-                <?php echo number_format($row['ExpenseAmount'], 2, '.', ''); ?>
+                <?php echo number_format($row['expense_amount'], 2, '.', ''); ?>
               </td>
               <td class="px-2 sm:px-6 py-4 text-sm">
-                <?php echo htmlspecialchars($row['ExpenseDescr']); ?>
+                <?php echo htmlspecialchars($row['expense_description']); ?>
               </td>
               <td class="px-2 sm:px-6 py-4 text-sm">
-                <button onclick="editExpense(<?php echo $row['ExpenseID']; ?>)" 
+                <button onclick="editExpense(<?php echo $row['expense_id']; ?>)"
                 class="text-blue-600 hover:text-blue-900">Edit</button>
               </td>
             </tr>

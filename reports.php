@@ -14,10 +14,10 @@ try {
         $year = $date->format('Y');
         $monthName = $date->format('M Y');
         
-        $sql = "SELECT COALESCE(SUM(ExpenseAmount), 0) as total
-                FROM expense
-                WHERE MONTH(ExpenseDate) = :month
-                AND YEAR(ExpenseDate) = :year";
+        $sql = "SELECT COALESCE(SUM(expense_amount), 0) as total
+                FROM expenses
+                WHERE MONTH(created_at) = :month
+                AND YEAR(created_at) = :year";
         
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -75,12 +75,12 @@ try {
     $endDate = clone $currentDate;
     $endDate->modify("-1 month")->modify("last day of this month");
     
-    $categorySql = "SELECT et.categDescr as category, SUM(e.ExpenseAmount) as total
-                    FROM expense e
-                    JOIN expensetype et ON e.CategID = et.categID
-                    WHERE e.ExpenseDate >= :startDate
-                    AND e.ExpenseDate <= :endDate
-                    GROUP BY e.CategID, et.categDescr
+    $categorySql = "SELECT ec.category_name as category, SUM(e.expense_amount) as total
+                    FROM expenses e
+                    JOIN expense_categories ec ON e.category_id = ec.category_id
+                    WHERE e.created_at >= :startDate
+                    AND e.created_at <= :endDate
+                    GROUP BY e.category_id, ec.category_name
                     ORDER BY total DESC
                     LIMIT 10";
     

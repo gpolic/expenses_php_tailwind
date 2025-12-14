@@ -7,13 +7,13 @@ try {
     $defaultCategories = [2, 4, 8, 9, 10, 15, 23, 24, 30, 32];
     
     // Get all categories
-    $stmt = $pdo->query("SELECT * FROM expensetype ORDER BY categDescr");
+    $stmt = $pdo->query("SELECT * FROM expense_categories ORDER BY category_name");
     $allCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Filter for initial display
     $showAll = isset($_GET['show_all']) && $_GET['show_all'] == 1;
     $displayCategories = $showAll ? $allCategories : array_filter($allCategories, function($cat) use ($defaultCategories) {
-        return in_array($cat['categID'], $defaultCategories);
+        return in_array($cat['category_id'], $defaultCategories);
     });
 } catch(PDOException $e) {
     die("Query failed: " . $e->getMessage());
@@ -42,10 +42,10 @@ try {
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
                 <?php foreach($displayCategories as $category) { ?>
-                    <a href="add_expense_details.php?category=<?php echo $category['categID']; ?>" 
+                    <a href="add_expense_details.php?category=<?php echo $category['category_id']; ?>"
                        class="block p-2 sm:p-4 border rounded-lg hover:bg-blue-50 text-center transition-colors">
                         <span class="text-sm sm:text-base font-medium text-gray-700">
-                            <?php echo htmlspecialchars($category['categDescr']); ?>
+                            <?php echo htmlspecialchars($category['category_name']); ?>
                         </span>
                     </a>
                 <?php } ?>

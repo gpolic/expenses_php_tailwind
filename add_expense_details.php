@@ -4,7 +4,7 @@ require_once 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $sql = "INSERT INTO expense (CategID, ExpenseAmount, ExpenseDate, ExpenseDescr)
+        $sql = "INSERT INTO expenses (category_id, expense_amount, created_at, expense_description)
                 VALUES (:category, :amount, NOW(), :description)";
         
         $description = !empty($_POST['description']) ? $_POST['description'] : '';
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 try {
     // Fetch category details
-    $stmt = $pdo->prepare("SELECT * FROM expensetype WHERE categID = ?");
+    $stmt = $pdo->prepare("SELECT * FROM expense_categories WHERE category_id = ?");
     $stmt->execute([$_GET['category']]);
     $category = $stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -36,11 +36,11 @@ try {
 
     // Fetch top 3 descriptions for this category
     $stmt = $pdo->prepare("
-        SELECT ExpenseDescr, COUNT(*) as count 
-        FROM expense 
-        WHERE CategID = :category 
-        GROUP BY ExpenseDescr 
-        ORDER BY count DESC 
+        SELECT expense_description, COUNT(*) as count
+        FROM expenses
+        WHERE category_id = :category
+        GROUP BY expense_description
+        ORDER BY count DESC
         LIMIT 3
     ");
     $stmt->execute([':category' => $_GET['category']]);
@@ -65,7 +65,7 @@ try {
     <div class="container mx-auto px-4 py-4 sm:py-8 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">
-                New Expense: <?php echo htmlspecialchars($category['categDescr']); ?>
+                New Expense: <?php echo htmlspecialchars($category['category_name']); ?>
             </h1>
             <a href="add_record.php" 
                class="text-blue-500 hover:text-blue-700 text-sm sm:text-base">
@@ -75,7 +75,7 @@ try {
         
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
             <form method="POST" class="space-y-4">
-                <input type="hidden" name="category" value="<?php echo $category['categID']; ?>">
+                <input type="hidden" name="category" value="<?php echo $category['category_id']; ?>">
                 
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
@@ -100,9 +100,9 @@ try {
                     <div class="flex flex-wrap gap-2">
                         <?php foreach($topDescriptions as $desc) { ?>
                             <button type="button"
-                                    onclick="setDescription('<?php echo htmlspecialchars($desc['ExpenseDescr']); ?>')"
+                                    onclick="setDescription('<?php echo htmlspecialchars($desc['expense_description']); ?>')"
                                     class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded text-sm">
-                                <?php echo htmlspecialchars($desc['ExpenseDescr']); ?>
+                                <?php echo htmlspecialchars($desc['expense_description']); ?>
                             </button>
                         <?php } ?>
                     </div>
