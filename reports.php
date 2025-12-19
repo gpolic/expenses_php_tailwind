@@ -228,17 +228,6 @@ try {
                         pointBorderWidth: 2
                     },
                     {
-                        label: 'Average (' + average.toFixed(2) + '€)',
-                        data: averageData,
-                        borderColor: 'rgb(16, 185, 129)',
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        borderDash: [10, 5],
-                        fill: false,
-                        pointRadius: 0,
-                        pointHoverRadius: 0
-                    },
-                    {
                         label: 'Trend Line',
                         data: trendData,
                         borderColor: 'rgb(239, 68, 68)',
@@ -272,15 +261,13 @@ try {
                         bodyColor: 'white',
                         borderColor: 'rgba(59, 130, 246, 0.5)',
                         borderWidth: 1,
+                        filter: function(tooltipItem) {
+                            // Only show tooltip for Monthly Expenses dataset (index 0)
+                            return tooltipItem.datasetIndex === 0;
+                        },
                         callbacks: {
                             label: function(context) {
-                                if (context.datasetIndex === 0) {
-                                    return context.dataset.label + ': €' + context.parsed.y.toFixed(2);
-                                } else if (context.datasetIndex === 1) {
-                                    return 'Average: €' + context.parsed.y.toFixed(2);
-                                } else {
-                                    return 'Trend: €' + context.parsed.y.toFixed(2);
-                                }
+                                return context.dataset.label + ': €' + context.parsed.y.toFixed(2);
                             }
                         }
                     }
@@ -291,12 +278,7 @@ try {
                             color: 'rgba(0, 0, 0, 0.1)'
                         },
                         title: {
-                            display: true,
-                            text: 'Month',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
+                            display: false
                         }
                     },
                     y: {
@@ -304,12 +286,7 @@ try {
                             color: 'rgba(0, 0, 0, 0.1)'
                         },
                         title: {
-                            display: true,
-                            text: 'Amount (€)',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
+                            display: false
                         },
                         ticks: {
                             callback: function(value) {
@@ -382,12 +359,7 @@ try {
                             color: 'rgba(0, 0, 0, 0.1)'
                         },
                         title: {
-                            display: true,
-                            text: 'Expense Categories',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
+                            display: false
                         },
                         ticks: {
                             maxRotation: 45,
@@ -399,12 +371,7 @@ try {
                             color: 'rgba(0, 0, 0, 0.1)'
                         },
                         title: {
-                            display: true,
-                            text: 'Total Amount (€)',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
+                            display: false
                         },
                         ticks: {
                             callback: function(value) {
