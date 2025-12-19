@@ -125,15 +125,15 @@ try {
         </div>
 
         <!-- Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+            <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
                 <div class="flex items-center">
                     <div class="flex-1">
-                        <h2 class="text-sm font-medium text-gray-500">12-Month Average</h2>
-                        <p class="text-2xl font-bold text-blue-600"><?= number_format($average, 2) ?>€</p>
+                        <h2 class="text-xs md:text-sm font-medium text-gray-500">12-Month Average</h2>
+                        <p class="text-xl md:text-2xl font-bold text-blue-600"><?= number_format($average, 2) ?>€</p>
                     </div>
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <div class="w-6 h-6 md:w-8 md:h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg class="w-3 h-3 md:w-4 md:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                             <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
                         </svg>
@@ -141,30 +141,30 @@ try {
                 </div>
             </div>
             
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
                 <div class="flex items-center">
                     <div class="flex-1">
-                        <h2 class="text-sm font-medium text-gray-500">Total (12 months)</h2>
-                        <p class="text-2xl font-bold text-green-600"><?= number_format($totalAmount, 2) ?>€</p>
+                        <h2 class="text-xs md:text-sm font-medium text-gray-500">Total (12 months)</h2>
+                        <p class="text-xl md:text-2xl font-bold text-green-600"><?= number_format($totalAmount, 2) ?>€</p>
                     </div>
-                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <div class="w-6 h-6 md:w-8 md:h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-3 h-3 md:w-4 md:h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
                         </svg>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
                 <div class="flex items-center">
                     <div class="flex-1">
-                        <h2 class="text-sm font-medium text-gray-500">Trend</h2>
-                        <p class="text-2xl font-bold <?= $slope > 0 ? 'text-red-600' : 'text-green-600' ?>">
+                        <h2 class="text-xs md:text-sm font-medium text-gray-500">Trend</h2>
+                        <p class="text-xl md:text-2xl font-bold <?= $slope > 0 ? 'text-red-600' : 'text-green-600' ?>">
                             <?= $slope > 0 ? '↗' : '↘' ?> <?= abs($slope) > 1 ? 'Strong' : 'Moderate' ?>
                         </p>
                     </div>
-                    <div class="w-8 h-8 <?= $slope > 0 ? 'bg-red-100' : 'bg-green-100' ?> rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 <?= $slope > 0 ? 'text-red-600' : 'text-green-600' ?>" fill="currentColor" viewBox="0 0 20 20">
+                    <div class="w-6 h-6 md:w-8 md:h-8 <?= $slope > 0 ? 'bg-red-100' : 'bg-green-100' ?> rounded-full flex items-center justify-center">
+                        <svg class="w-3 h-3 md:w-4 md:h-4 <?= $slope > 0 ? 'text-red-600' : 'text-green-600' ?>" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.414 14.586 7H12z" clip-rule="evenodd"></path>
                         </svg>
                     </div>
@@ -175,7 +175,7 @@ try {
         <!-- Line Chart -->
         <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
             <h2 class="text-xl font-bold text-gray-800 mb-4">Monthly Expenses - Last 12 Months</h2>
-            <div class="relative h-96">
+            <div class="relative h-64 sm:h-80 lg:h-96">
                 <canvas id="expenseChart"></canvas>
             </div>
         </div>
@@ -183,7 +183,7 @@ try {
         <!-- Bar Chart -->
         <div class="bg-white rounded-lg shadow-lg p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-4">Top 10 Expense Categories</h2>
-            <div class="relative h-96">
+            <div class="relative h-64 sm:h-80 lg:h-96">
                 <canvas id="categoryChart"></canvas>
             </div>
         </div>
