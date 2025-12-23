@@ -33,10 +33,10 @@ git clone https://github.com/gpolic/expenses_php_tailwind.git
 
 4. Deploy to your web server or run locally
 
-5. In case there are many categories setup in the DB, shorten your default category list by updating 'add_record.php' for $defaultCategories with your preferred category IDs
+
+5. The application automatically shows the 10 most frequently used categories from the past 2 months on the Add Record page
 
 ## Database Configuration
-
 This application uses Aiven.io as MySQL cloud database. To configure your database connection:
 
 1. Create a MySQL database service on [Aiven.io](https://aiven.io/)

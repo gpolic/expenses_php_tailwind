@@ -3,18 +3,52 @@ require_once 'session_check.php';
 require_once 'config.php';
 
 try {
-    // Define default category IDs
-    $defaultCategories = [2, 4, 8, 9, 10, 15, 23, 24, 30, 32];
+    // Get the 10 most frequent categories from the past 2 months
+    $sql = "SELECT ec.category_id, ec.category_name, COUNT(e.expense_id) as frequency
+            FROM expense_categories ec
+            LEFT JOIN expenses e ON ec.category_id = e.category_id
+            WHERE e.created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH) OR e.created_at IS NULL
+            GROUP BY ec.category_id, ec.category_name
+            ORDER BY frequency DESC, ec.category_name
+            LIMIT 12";
+    
+    $stmt = $pdo->query($sql);
+    $topCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Get all categories
     $stmt = $pdo->query("SELECT * FROM expense_categories ORDER BY category_name");
     $allCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    // Check if there are any expense records
+    $checkRecordsStmt = $pdo->query("SELECT COUNT(*) as count FROM expenses");
+    $recordCount = $checkRecordsStmt->fetch(PDO::FETCH_ASSOC)['count'];
+    
+    // If no records exist, use all categories; otherwise use the top 10
+    if ($recordCount == 0) {
+        $defaultCategories = array_column($allCategories, 'category_id');
+    } else {
+        $defaultCategories = array_column($topCategories, 'category_id');
+    }
+    
     // Filter for initial display
     $showAll = isset($_GET['show_all']) && $_GET['show_all'] == 1;
-    $displayCategories = $showAll ? $allCategories : array_filter($allCategories, function($cat) use ($defaultCategories) {
-        return in_array($cat['category_id'], $defaultCategories);
-    });
+    
+    if ($showAll) {
+        $displayCategories = $allCategories;
+    } else {
+        // Create a lookup array to preserve the frequency order from topCategories
+        $categoryOrder = array_flip($defaultCategories);
+        
+        // Filter and sort the categories based on frequency order
+        $displayCategories = array_filter($allCategories, function($cat) use ($defaultCategories) {
+            return in_array($cat['category_id'], $defaultCategories);
+        });
+        
+        // Sort the filtered categories by the frequency order
+        usort($displayCategories, function($a, $b) use ($categoryOrder) {
+            return $categoryOrder[$a['category_id']] - $categoryOrder[$b['category_id']];
+        });
+    }
 } catch(PDOException $e) {
     die("Query failed: " . $e->getMessage());
 }
