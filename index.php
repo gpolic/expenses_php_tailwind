@@ -7,21 +7,84 @@ require_once 'session_check.php';
 try {
     $currentMonth = date('m');
     $currentYear = date('Y');
+    $currentDay = date('d');
+    $yesterday = $currentDay - 1;
     
-    $monthlyTotalSql = "SELECT SUM(expense_amount) as monthTotal
-                        FROM expenses
-                        WHERE MONTH(created_at) = :month
-                        AND YEAR(created_at) = :year";
+    // If yesterday is 0, it means we're at the beginning of the month
+    if ($yesterday <= 0) {
+        // Get the last day of the previous month
+        $yesterday = cal_days_in_month(CAL_GREGORIAN, $currentMonth - 1, $currentYear);
+        // Calculate for previous month instead
+        $currentMonthForQuery = $currentMonth - 1;
+        $currentYearForQuery = $currentYear;
+        
+        if ($currentMonthForQuery == 0) {
+            $currentMonthForQuery = 12;
+            $currentYearForQuery = $currentYear - 1;
+        }
+    } else {
+        $currentMonthForQuery = $currentMonth;
+        $currentYearForQuery = $currentYear;
+    }
     
-    $stmt = $pdo->prepare($monthlyTotalSql);
+    // Current month total up to yesterday
+    $currentMonthTotalSql = "SELECT SUM(expense_amount) as monthTotal
+                            FROM expenses
+                            WHERE MONTH(created_at) = :month
+                            AND YEAR(created_at) = :year
+                            AND DAY(created_at) <= :day";
+    
+    $stmt = $pdo->prepare($currentMonthTotalSql);
     $stmt->execute([
-        ':month' => $currentMonth,
-        ':year' => $currentYear
+        ':month' => $currentMonthForQuery,
+        ':year' => $currentYearForQuery,
+        ':day' => $yesterday
     ]);
     
-    $monthlyTotal = $stmt->fetch(PDO::FETCH_ASSOC);
+    $currentMonthTotal = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Previous month total for the same period (up to yesterday of the previous month)
+    $previousMonth = $currentMonthForQuery - 1;
+    $previousYear = $currentYearForQuery;
+    
+    if ($previousMonth == 0) {
+        $previousMonth = 12;
+        $previousYear = $currentYearForQuery - 1;
+    }
+    
+    // Get the number of days in the previous month to handle months with different lengths
+    $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, $previousMonth, $previousYear);
+    $dayForPreviousMonth = min($yesterday, $daysInPreviousMonth);
+    
+    $previousMonthTotalSql = "SELECT SUM(expense_amount) as monthTotal
+                             FROM expenses
+                             WHERE MONTH(created_at) = :month
+                             AND YEAR(created_at) = :year
+                             AND DAY(created_at) <= :day";
+    
+    $stmtPrev = $pdo->prepare($previousMonthTotalSql);
+    $stmtPrev->execute([
+        ':month' => $previousMonth,
+        ':year' => $previousYear,
+        ':day' => $dayForPreviousMonth
+    ]);
+    
+    $previousMonthTotal = $stmtPrev->fetch(PDO::FETCH_ASSOC);
+    
+    // Calculate percentage difference
+    $currentValue = (float)$currentMonthTotal['monthTotal'];
+    $previousValue = (float)$previousMonthTotal['monthTotal'];
+    
+    if ($previousValue != 0) {
+        $percentageChange = (($currentValue - $previousValue) / abs($previousValue)) * 100;
+    } else {
+        $percentageChange = $currentValue > 0 ? 100 : 0; // If previous is 0 and current is positive, show 100% increase
+    }
+    
 } catch(PDOException $e) {
-    $monthlyTotal = ['monthTotal' => 0];
+    $currentMonthTotal = ['monthTotal' => 0];
+    $previousMonthTotal = ['monthTotal' => 0];
+    $percentageChange = 0;
 }
   
 
@@ -78,10 +141,15 @@ try {
             Month Total:
           </span>
           <span class="text-base font-bold text-blue-600">
-             <?= number_format($monthlyTotal['monthTotal'], 2) ?>€
-          </span>
-        </div>
-      </div>
+             <?= number_format($currentMonthTotal['monthTotal'], 2) ?>€
+           </span>
+           <?php if (isset($percentageChange)): ?>
+           <span class="text-sm font-medium <?php echo $percentageChange >= 0 ? 'text-red-500' : 'text-green-500'; ?>">
+             (<?= $percentageChange >= 0 ? '+' : '' ?><?= number_format($percentageChange, 2) ?>%)
+           </span>
+           <?php endif; ?>
+         </div>
+       </div>
       
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full">
