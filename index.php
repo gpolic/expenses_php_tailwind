@@ -8,26 +8,8 @@ try {
     $currentMonth = date('m');
     $currentYear = date('Y');
     $currentDay = date('d');
-    $yesterday = $currentDay - 1;
     
-    // If yesterday is 0, it means we're at the beginning of the month
-    if ($yesterday <= 0) {
-        // Get the last day of the previous month
-        $yesterday = cal_days_in_month(CAL_GREGORIAN, $currentMonth - 1, $currentYear);
-        // Calculate for previous month instead
-        $currentMonthForQuery = $currentMonth - 1;
-        $currentYearForQuery = $currentYear;
-        
-        if ($currentMonthForQuery == 0) {
-            $currentMonthForQuery = 12;
-            $currentYearForQuery = $currentYear - 1;
-        }
-    } else {
-        $currentMonthForQuery = $currentMonth;
-        $currentYearForQuery = $currentYear;
-    }
-    
-    // Current month total up to yesterday
+    // Current month total up to current day (including today)
     $currentMonthTotalSql = "SELECT SUM(expense_amount) as monthTotal
                             FROM expenses
                             WHERE MONTH(created_at) = :month
@@ -36,25 +18,25 @@ try {
     
     $stmt = $pdo->prepare($currentMonthTotalSql);
     $stmt->execute([
-        ':month' => $currentMonthForQuery,
-        ':year' => $currentYearForQuery,
-        ':day' => $yesterday
+        ':month' => $currentMonth,
+        ':year' => $currentYear,
+        ':day' => $currentDay
     ]);
     
     $currentMonthTotal = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    // Previous month total for the same period (up to yesterday of the previous month)
-    $previousMonth = $currentMonthForQuery - 1;
-    $previousYear = $currentYearForQuery;
+    // Previous month total up to same day of previous month
+    $previousMonth = $currentMonth - 1;
+    $previousYear = $currentYear;
     
     if ($previousMonth == 0) {
         $previousMonth = 12;
-        $previousYear = $currentYearForQuery - 1;
+        $previousYear = $currentYear - 1;
     }
     
     // Get the number of days in the previous month to handle months with different lengths
     $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, $previousMonth, $previousYear);
-    $dayForPreviousMonth = min($yesterday, $daysInPreviousMonth);
+    $dayForPreviousMonth = min($currentDay, $daysInPreviousMonth);
     
     $previousMonthTotalSql = "SELECT SUM(expense_amount) as monthTotal
                              FROM expenses
