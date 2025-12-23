@@ -67,10 +67,16 @@ try {
     <div class="container mx-auto px-4 py-8 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Select Category</h1>
-            <a href="index.php"
-               class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium self-center">
-                Back to List
-            </a>
+            <div class="flex gap-2">
+                <a href="add_category.php"
+                   class="text-green-500 hover:text-green-700 text-sm sm:text-base font-medium self-center">
+                    Manage Categories
+                </a>
+                <a href="index.php"
+                   class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium self-center">
+                    Back to List
+                </a>
+            </div>
         </div>
         
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
