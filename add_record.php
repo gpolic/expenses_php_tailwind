@@ -64,11 +64,11 @@ try {
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-4 sm:py-8 max-w-2xl">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Select Category</h1>
-            <a href="index.php" 
-               class="text-blue-500 hover:text-blue-700 text-sm sm:text-base">
+            <a href="index.php"
+               class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium self-center">
                 Back to List
             </a>
         </div>

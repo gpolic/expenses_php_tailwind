@@ -114,11 +114,11 @@ try {
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Expense Reports</h1>
             <div class="flex gap-2 w-full sm:w-auto">
                 <a href="index.php"
-                   class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+                   class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
                     Back to List
                 </a>
                 <a href="logout.php"
-                   class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+                   class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
                     Logout
                 </a>
             </div>

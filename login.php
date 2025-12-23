@@ -15,7 +15,7 @@ if(isset($_SESSION['user_id'])) {
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <div class="min-h-screen flex items-center justify-center">
+    <div class="min-h-screen flex items-center justify-center bg-gray-50">
         <div class="bg-white p-8 rounded-lg shadow-lg w-96">
             <h1 class="text-2xl font-bold mb-6 text-center">Expense Tracker Login</h1>
             <form method="POST" action="auth.php">
@@ -29,8 +29,8 @@ if(isset($_SESSION['user_id'])) {
                     <input type="password" name="password" required 
                            class="shadow border rounded w-full py-2 px-3 text-gray-700">
                 </div>
-                <button type="submit" 
-                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded">
                     Login
                 </button>
             </form>

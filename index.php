@@ -103,35 +103,37 @@ try {
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Expenses Tracker</h1>
         <div class="flex gap-2 w-full sm:w-auto">
           <a href="add_record.php"
-          class="flex-1 sm:flex-none bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+          class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
             Add Record
           </a>
           <a href="reports.php"
-          class="flex-1 sm:flex-none bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+          class="flex-1 sm:flex-none bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
             Reports
           </a>
           <a href="logout.php"
-          class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+          class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
             Logout
           </a>
         </div>
       </div>
       
-      <div class="inline-block bg-white rounded-lg shadow-sm p-3 mb-6">
+      <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div class="flex items-center gap-3">
-          <span class="text-sm font-medium text-gray-500">
-            Month Total:
-          </span>
-          <span class="text-base font-bold text-blue-600">
-             <?= number_format($currentMonthTotal['monthTotal'], 2) ?>€
-           </span>
-           <?php if (isset($percentageChange)): ?>
-           <span class="text-sm font-medium <?php echo $percentageChange >= 0 ? 'text-red-500' : 'text-green-500'; ?>">
-             (<?= $percentageChange >= 0 ? '+' : '' ?><?= number_format($percentageChange, 2) ?>%)
-           </span>
-           <?php endif; ?>
-         </div>
-       </div>
+          <div>
+            <h2 class="text-sm font-medium text-gray-500">Month Total</h2>
+            <div class="flex items-baseline gap-2">
+              <p class="text-lg font-bold text-blue-600">
+                 <?= number_format($currentMonthTotal['monthTotal'], 2) ?>€
+              </p>
+              <?php if (isset($percentageChange)): ?>
+              <span class="text-sm font-medium <?php echo $percentageChange >= 0 ? 'text-red-500' : 'text-green-500'; ?>">
+                (<?= $percentageChange >= 0 ? '+' : '' ?><?= number_format($percentageChange, 2) ?>%)
+              </span>
+              <?php endif; ?>
+            </div>
+          </div>
+        </div>
+      </div>
       
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full">

@@ -62,13 +62,13 @@ try {
 
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-4 sm:py-8 max-w-2xl">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">
                 New Expense: <?php echo htmlspecialchars($category['category_name']); ?>
             </h1>
-            <a href="add_record.php" 
-               class="text-blue-500 hover:text-blue-700 text-sm sm:text-base">
+            <a href="add_record.php"
+               class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium self-center">
                 Back to Categories
             </a>
         </div>
