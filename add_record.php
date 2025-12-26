@@ -69,11 +69,11 @@ try {
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Select Category</h1>
             <div class="flex gap-2">
                 <a href="add_category.php"
-                   class="text-green-500 hover:text-green-700 text-sm sm:text-base font-medium self-center">
-                    Manage Categories
+                   class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
+                    Categories
                 </a>
                 <a href="index.php"
-                   class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium self-center">
+                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
                     Back to List
                 </a>
             </div>

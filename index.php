@@ -102,15 +102,11 @@ try {
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Expenses Tracker</h1>
         <div class="flex gap-2 w-full sm:w-auto">
-          <!-- Desktop navigation: show all buttons -->
+          <!-- Desktop navigation: show 3 buttons -->
           <div class="hidden sm:flex gap-2 w-auto">
             <a href="add_record.php"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
               Add Record
-            </a>
-            <a href="add_category.php"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-              Categories
             </a>
             <a href="reports.php"
             class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
@@ -122,29 +118,20 @@ try {
             </a>
           </div>
           
-          <!-- Mobile navigation: Add Record and Logout visible, others in dropdown -->
+          <!-- Mobile navigation: Add Record, Reports and Logout -->
           <div class="sm:hidden flex gap-2 w-full">
             <a href="add_record.php"
             class="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
               Add Record
             </a>
+            <a href="reports.php"
+            class="flex-1 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
+              Reports
+            </a>
             <a href="logout.php"
             class="flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
               Logout
             </a>
-            <!-- Dropdown menu for other actions -->
-            <div class="relative flex-1">
-              <button id="mobileDropdownButton" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                <span>More</span>
-                <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </button>
-              <div id="mobileDropdownMenu" class="hidden absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 z-10" style="display: none;">
-                <a href="add_category.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Categories</a>
-                <a href="reports.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reports</a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
