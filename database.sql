@@ -10,7 +10,8 @@ CREATE TABLE `expenses` (
   PRIMARY KEY (`expense_id`),
   KEY `category_id` (`category_id`),
   KEY `created_at` (`created_at`),
-  KEY "updated_at" ("updated_at")  
+  KEY "updated_at" ("updated_at"),
+  CONSTRAINT "fk_expenses_category" FOREIGN KEY ("category_id") REFERENCES "expense_categories" ("category_id") ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -19,7 +20,6 @@ CREATE TABLE `expense_categories` (
   `category_id` int NOT NULL AUTO_INCREMENT,
   `category_name` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`category_id`),
-  UNIQUE KEY `category_id` (`category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
