@@ -9,8 +9,8 @@ CREATE TABLE `expenses` (
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`expense_id`),
   KEY `category_id` (`category_id`),
-  KEY `expense_id` (`expense_id`),
-  KEY `created_at` (`created_at`)
+  KEY `created_at` (`created_at`),
+  KEY "updated_at" ("updated_at")  
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
