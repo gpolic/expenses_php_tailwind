@@ -68,10 +68,17 @@ try {
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Select Category</h1>
             <div class="flex gap-2">
-                <a href="add_category.php"
-                   class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                    Categories
-                </a>
+                <?php if (!$showAll) { ?>
+                    <a href="?show_all=1"
+                       class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
+                        Expand Categories
+                    </a>
+                <?php } else { ?>
+                    <a href="?"
+                       class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
+                        Show Less
+                    </a>
+                <?php } ?>
                 <a href="index.php"
                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
                     Back to List
@@ -91,21 +98,12 @@ try {
                 <?php } ?>
             </div>
 
-            <?php if (!$showAll) { ?>
-                <div class="mt-6 text-center">
-                    <a href="?show_all=1" 
-                       class="inline-block bg-gray-500 hover:bg-gray-600 text-white text-sm font-bold py-2 px-4 rounded">
-                        Expand Categories
-                    </a>
-                </div>
-            <?php } else { ?>
-                <div class="mt-6 text-center">
-                    <a href="?" 
-                       class="inline-block bg-gray-500 hover:bg-gray-600 text-white text-sm font-bold py-2 px-4 rounded">
-                        Show Less
-                    </a>
-                </div>
-            <?php } ?>
+            <div class="mt-6 text-center">
+                <a href="add_category.php"
+                   class="inline-block bg-green-500 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded">
+                    Manage Categories
+                </a>
+            </div>
         </div>
     </div>
   <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
