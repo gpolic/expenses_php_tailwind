@@ -3,7 +3,7 @@ require_once 'session_check.php';
 require_once 'config.php';
 
 try {
-    // Get the 10 most frequent categories from the past 2 months
+    // Get the 10 most frequent categories from the past 3 months
     $sql = "SELECT ec.category_id, ec.category_name, COUNT(e.expense_id) as frequency
             FROM expense_categories ec
             LEFT JOIN expenses e ON ec.category_id = e.category_id
@@ -99,7 +99,7 @@ try {
             </div>
 
             <div class="mt-6 text-center">
-                <a href="add_category.php"
+                <a href="manage_category.php"
                    class="inline-block bg-green-500 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded">
                     Manage Categories
                 </a>
