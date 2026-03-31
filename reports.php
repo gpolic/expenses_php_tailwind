@@ -5,8 +5,8 @@ require_once 'session_check.php';
 // Get last 12 completed months of expense data (excluding current month)
 try {
     $monthlyData = [];
-    $currentDate = new DateTime();
-    
+    $currentDate = new DateTime('first day of this month');
+
     for ($i = 12; $i >= 1; $i--) {
         $date = clone $currentDate;
         $date->modify("-$i months");
