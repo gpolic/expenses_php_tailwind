@@ -166,8 +166,11 @@ try {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
-            <?php while($row = $stmt->fetch(PDO::FETCH_ASSOC)) { ?>
-            <tr class="hover:bg-gray-50">
+            <?php
+            $alt = false;
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            ?>
+            <tr class="<?php echo $alt ? 'bg-gray-50' : 'bg-white'; ?> hover:bg-blue-50 transition-colors">
               <td class="px-2 sm:px-6 py-4 text-sm">
                 <?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?>
               </td>
@@ -185,7 +188,7 @@ try {
                 class="text-blue-600 hover:text-blue-900">Edit</button>
               </td>
             </tr>
-            <?php } ?>
+            <?php $alt = !$alt; } ?>
           </tbody>
         </table>
       </div>
