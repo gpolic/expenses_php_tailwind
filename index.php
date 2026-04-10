@@ -156,41 +156,54 @@ try {
         </div>
       </div>
       
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <!-- Mobile: card list -->
+      <div class="sm:hidden flex flex-col gap-2">
+        <?php
+        $alt = false;
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach($rows as $row):
+        ?>
+        <div class="<?php echo $alt ? 'bg-gray-50' : 'bg-white'; ?> rounded-lg shadow-sm p-3 flex flex-col gap-1 cursor-pointer active:bg-blue-50"
+             onclick="editExpense(<?php echo $row['expense_id']; ?>)">
+          <div class="flex justify-between items-start">
+            <span class="text-sm font-bold text-gray-800"><?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?></span>
+            <span class="text-xs text-gray-500"><?php echo htmlspecialchars($row['expense_description']); ?></span>
+          </div>
+          <div class="flex justify-between items-end">
+            <span class="text-sm text-gray-800"><?php echo htmlspecialchars($row['category_name']); ?></span>
+            <span class="text-sm font-bold text-blue-600"><?php echo number_format($row['expense_amount'], 2, '.', ''); ?>€</span>
+          </div>
+        </div>
+        <?php $alt = !$alt; endforeach; ?>
+      </div>
+
+      <!-- Desktop: table -->
+      <div class="hidden sm:block relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full">
           <thead class="bg-gray-100">
             <tr>
-              <th class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200" onclick="sortTable(0)">Date</th>
-              <th class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200" onclick="sortTable(1)">Category</th>
-              <th class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200" onclick="sortTable(2)">Amount</th>
-              <th class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200" onclick="sortTable(3)">Description</th>
-              <th class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
             <?php
             $alt = false;
-            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            foreach($rows as $row):
             ?>
             <tr class="<?php echo $alt ? 'bg-gray-50' : 'bg-white'; ?> hover:bg-blue-50 transition-colors">
-              <td class="px-2 sm:px-6 py-4 text-sm">
-                <?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?>
-              </td>
-              <td class="px-2 sm:px-6 py-4 text-sm">
-                <?php echo htmlspecialchars($row['category_name']); ?>
-              </td>
-              <td class="px-2 sm:px-6 py-4 text-sm text-right">
-                <?php echo number_format($row['expense_amount'], 2, '.', ''); ?>
-              </td>
-              <td class="px-2 sm:px-6 py-4 text-sm">
-                <?php echo htmlspecialchars($row['expense_description']); ?>
-              </td>
-              <td class="px-2 sm:px-6 py-4 text-sm">
-                <button onclick="editExpense(<?php echo $row['expense_id']; ?>)"
-                class="text-blue-600 hover:text-blue-900">Edit</button>
+              <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?></td>
+              <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars($row['category_name']); ?></td>
+              <td class="px-6 py-4 text-sm text-right"><?php echo number_format($row['expense_amount'], 2, '.', ''); ?></td>
+              <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars($row['expense_description']); ?></td>
+              <td class="px-6 py-4 text-sm">
+                <button onclick="editExpense(<?php echo $row['expense_id']; ?>)" class="text-blue-600 hover:text-blue-900">Edit</button>
               </td>
             </tr>
-            <?php $alt = !$alt; } ?>
+            <?php $alt = !$alt; endforeach; ?>
           </tbody>
         </table>
       </div>
@@ -201,100 +214,7 @@ try {
     function editExpense(id) {
         window.location.href = `edit.php?id=${id}`;
     }
-
-    // Mobile dropdown functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileDropdownButton = document.getElementById('mobileDropdownButton');
-        const mobileDropdownMenu = document.getElementById('mobileDropdownMenu');
-
-        mobileDropdownButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            mobileDropdownMenu.style.display = mobileDropdownMenu.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Close mobile dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!mobileDropdownButton.contains(e.target) && !mobileDropdownMenu.contains(e.target)) {
-                mobileDropdownMenu.style.display = 'none';
-            }
-        });
-    });
     </script>
   <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
-  <script>
-    function sortTable(n) {
-      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.querySelector("table");
-      switching = true;
-      dir = "asc";
-      
-      while (switching) {
-        switching = false;
-        rows = table.rows;
-        
-        for (i = 1; i < (rows.length - 1); i++) {
-          shouldSwitch = false;
-          x = rows[i].getElementsByTagName("TD")[n];
-          y = rows[i + 1].getElementsByTagName("TD")[n];
-          
-          if (n === 0) { // Date column
-            // Convert dd/mm/yyyy to Date objects
-            let dateParts1 = x.innerHTML.split('/');
-            let dateParts2 = y.innerHTML.split('/');
-            let date1 = new Date(dateParts1[2], dateParts1[1] - 1, dateParts1[0]);
-            let date2 = new Date(dateParts2[2], dateParts2[1] - 1, dateParts2[0]);
-            
-            if (dir === "asc") {
-              if (date1 > date2) {
-                shouldSwitch = true;
-                break;
-                  }
-            } else {
-              if (date1 < date2) {
-                shouldSwitch = true;
-                break;
-                  }
-            }
-          } else if (n === 2) { // Amount column
-            if (dir === "asc") {
-              if (Number(x.innerHTML) > Number(y.innerHTML)) {
-                shouldSwitch = true;
-                break;
-                  }
-            } else {
-              if (Number(x.innerHTML) < Number(y.innerHTML)) {
-                shouldSwitch = true;
-                break;
-                  }
-            }
-          } else { // Text columns
-            if (dir === "asc") {
-              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                shouldSwitch = true;
-                break;
-                  }
-            } else {
-              if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                shouldSwitch = true;
-                break;
-                  }
-            }
-          }
-        }
-        
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          switchcount++;
-        } else {
-          if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
-            switching = true;
-          }
-        }
-      }
-    }
-
-  </script>
 </body>
 </html>
