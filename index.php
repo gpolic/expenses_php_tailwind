@@ -92,8 +92,10 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
   <link href="https://unpkg.com/flowbite@latest/dist/flowbite.min.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+
 </head>
 <body class="bg-gray-50">
     <div class="container mx-auto px-4 py-8">

@@ -104,8 +104,11 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - Expense Tracker</title>
     <link href="https://unpkg.com/flowbite@latest/dist/flowbite.min.css" rel="stylesheet" />
+    <link href="styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  
 </head>
 <body class="bg-gray-50">
     <div class="container mx-auto px-4 py-8">
@@ -181,9 +184,9 @@ try {
         </div>
 
         <!-- Bar Chart -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Top 10 Expense Categories</h2>
-            <div class="relative h-64 sm:h-80 lg:h-96">
+        <div class="bg-white rounded-lg shadow-lg p-3 sm:p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Top 10 Expense Categories</h2>
+            <div class="relative h-[400px] sm:h-96 lg:h-[28rem]">
                 <canvas id="categoryChart"></canvas>
             </div>
         </div>
@@ -298,7 +301,7 @@ try {
             }
         };
 
-        // Bar Chart configuration
+        // Bar Chart configuration (horizontal)
         const barConfig = {
             type: 'bar',
             data: {
@@ -307,33 +310,26 @@ try {
                     label: 'Total Amount (€)',
                     data: categoryAmounts,
                     backgroundColor: [
-                        'rgba(59, 130, 246, 0.7)',   // Blue
-                        'rgba(16, 185, 129, 0.7)',   // Green
-                        'rgba(239, 68, 68, 0.7)',    // Red
-                        'rgba(245, 158, 11, 0.7)',   // Yellow
-                        'rgba(139, 92, 246, 0.7)',   // Purple
-                        'rgba(236, 72, 153, 0.7)',   // Pink
-                        'rgba(14, 165, 233, 0.7)',   // Sky
-                        'rgba(34, 197, 94, 0.7)',    // Emerald
-                        'rgba(251, 146, 60, 0.7)',   // Orange
-                        'rgba(168, 85, 247, 0.7)'    // Violet
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(139, 92, 246, 0.8)',
+                        'rgba(236, 72, 153, 0.8)',
+                        'rgba(14, 165, 233, 0.8)',
+                        'rgba(34, 197, 94, 0.8)',
+                        'rgba(251, 146, 60, 0.8)',
+                        'rgba(168, 85, 247, 0.8)'
                     ],
-                    borderColor: [
-                        'rgb(59, 130, 246)',
-                        'rgb(16, 185, 129)',
-                        'rgb(239, 68, 68)',
-                        'rgb(245, 158, 11)',
-                        'rgb(139, 92, 246)',
-                        'rgb(236, 72, 153)',
-                        'rgb(14, 165, 233)',
-                        'rgb(34, 197, 94)',
-                        'rgb(251, 146, 60)',
-                        'rgb(168, 85, 247)'
-                    ],
-                    borderWidth: 2
+                    borderWidth: 0,
+                    borderRadius: 4,
+                    categoryPercentage: 0.95,
+                    barPercentage: 0.95
                 }]
             },
+            plugins: [ChartDataLabels],
             options: {
+                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
@@ -341,41 +337,45 @@ try {
                         display: false
                     },
                     tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        titleColor: 'white',
-                        bodyColor: 'white',
-                        borderColor: 'rgba(59, 130, 246, 0.5)',
-                        borderWidth: 1,
-                        callbacks: {
-                            label: function(context) {
-                                return 'Total: €' + context.parsed.y.toFixed(2);
-                            }
+                        enabled: false
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: function(context) {
+                            const value = context.dataset.data[context.dataIndex];
+                            const max = Math.max(...context.dataset.data);
+                            return value / max < 0.25 ? 'end' : 'start';
+                        },
+                        color: function(context) {
+                            const value = context.dataset.data[context.dataIndex];
+                            const max = Math.max(...context.dataset.data);
+                            return value / max < 0.25 ? '#374151' : 'white';
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 11
+                        },
+                        formatter: function(value) {
+                            return '€' + value.toFixed(0);
                         }
                     }
                 },
+                layout: {
+                    padding: { right: window.innerWidth < 640 ? 48 : 60 }
+                },
                 scales: {
                     x: {
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        },
-                        title: {
-                            display: false
-                        },
-                        ticks: {
-                            maxRotation: 45,
-                            minRotation: 45
-                        }
+                        display: false,
+                        grid: { display: false }
                     },
                     y: {
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        },
-                        title: {
-                            display: false
-                        },
+                        grid: { display: false },
                         ticks: {
+                            font: { size: 11 },
                             callback: function(value) {
-                                return '€' + value.toFixed(0);
+                                const label = this.getLabelForValue(value);
+                                const max = window.innerWidth < 640 ? 12 : 30;
+                                return label.length > max ? label.substring(0, max) + '…' : label;
                             }
                         }
                     }
