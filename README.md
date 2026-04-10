@@ -34,7 +34,7 @@ git clone https://github.com/gpolic/expenses_php_tailwind.git
 4. Deploy to your web server or run locally
 
 
-5. The application automatically shows the 10 most frequently used categories from the past 2 months on the Add Record page
+5. The application automatically shows the 12 most frequently used categories from the past 3 months on the Add Record page
 
 ## Database Configuration
 This application uses Aiven.io as MySQL cloud database. To configure your database connection:
@@ -74,7 +74,7 @@ The application uses the following tables:
 - `category_name` - Category name
 
 ### `users`
-- `id` - Primary key
+- `user_id` - Primary key
 - `username` - User login name
 - `password` - Hashed password
 
