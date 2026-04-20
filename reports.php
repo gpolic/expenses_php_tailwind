@@ -324,7 +324,8 @@ try {
                     borderWidth: 0,
                     borderRadius: 4,
                     categoryPercentage: 0.95,
-                    barPercentage: 0.95
+                    barPercentage: 0.95,
+                    clip: false
                 }]
             },
             plugins: [ChartDataLabels],
@@ -344,12 +345,14 @@ try {
                         align: function(context) {
                             const value = context.dataset.data[context.dataIndex];
                             const max = Math.max(...context.dataset.data);
-                            return value / max < 0.25 ? 'end' : 'start';
+                            const barPx = (value / max) * context.chart.chartArea.width;
+                            return barPx < 55 ? 'end' : 'start';
                         },
                         color: function(context) {
                             const value = context.dataset.data[context.dataIndex];
                             const max = Math.max(...context.dataset.data);
-                            return value / max < 0.25 ? '#374151' : 'white';
+                            const barPx = (value / max) * context.chart.chartArea.width;
+                            return barPx < 55 ? '#374151' : 'white';
                         },
                         font: {
                             weight: 'bold',
@@ -361,7 +364,7 @@ try {
                     }
                 },
                 layout: {
-                    padding: { right: window.innerWidth < 640 ? 48 : 60 }
+                    padding: 0
                 },
                 scales: {
                     x: {
@@ -374,7 +377,7 @@ try {
                             font: { size: 11 },
                             callback: function(value) {
                                 const label = this.getLabelForValue(value);
-                                const max = window.innerWidth < 640 ? 12 : 30;
+                                const max = window.innerWidth < 640 ? 8 : 30;
                                 return label.length > max ? label.substring(0, max) + '…' : label;
                             }
                         }
