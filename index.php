@@ -186,7 +186,6 @@ try {
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
@@ -194,14 +193,12 @@ try {
             $alt = false;
             foreach($rows as $row):
             ?>
-            <tr class="<?php echo $alt ? 'bg-gray-50' : 'bg-white'; ?> hover:bg-blue-50 transition-colors">
+            <tr class="<?php echo $alt ? 'bg-gray-50' : 'bg-white'; ?> hover:bg-blue-50 transition-colors cursor-pointer"
+                onclick="editExpense(<?php echo $row['expense_id']; ?>)">
               <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?></td>
               <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars($row['category_name']); ?></td>
               <td class="px-6 py-4 text-sm text-right"><?php echo number_format($row['expense_amount'], 2, '.', ''); ?></td>
               <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars($row['expense_description']); ?></td>
-              <td class="px-6 py-4 text-sm">
-                <button onclick="editExpense(<?php echo $row['expense_id']; ?>)" class="text-blue-600 hover:text-blue-900">Edit</button>
-              </td>
             </tr>
             <?php $alt = !$alt; endforeach; ?>
           </tbody>

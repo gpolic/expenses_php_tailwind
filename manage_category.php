@@ -26,27 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error_message = "Error adding category: " . $e->getMessage();
         }
 
-    } elseif ($action === 'edit') {
-        try {
-            $category_id   = (int)$_POST['category_id'];
-            $category_name = trim($_POST['category_name']);
-            if (empty($category_name)) {
-                $error_message = "Category name cannot be empty.";
-            } else {
-                $checkStmt = $pdo->prepare("SELECT category_id FROM expense_categories WHERE category_name = :name AND category_id != :id");
-                $checkStmt->execute([':name' => $category_name, ':id' => $category_id]);
-                if ($checkStmt->rowCount() > 0) {
-                    $error_message = "Category '" . htmlspecialchars($category_name) . "' already exists.";
-                } else {
-                    $stmt = $pdo->prepare("UPDATE expense_categories SET category_name = :name WHERE category_id = :id");
-                    $stmt->execute([':name' => $category_name, ':id' => $category_id]);
-                    $success_message = "Category updated successfully.";
-                }
-            }
-        } catch (PDOException $e) {
-            $error_message = "Error updating category: " . $e->getMessage();
-        }
-
     } elseif ($action === 'delete') {
         try {
             $category_id = (int)$_POST['category_id'];
@@ -142,57 +121,15 @@ try {
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             <?php foreach ($categories as $cat): ?>
-                            <tr class="hover:bg-gray-50" id="row-<?php echo $cat['category_id']; ?>">
-
-                                <!-- View mode -->
-                                <td class="px-4 py-3 font-medium text-gray-700 view-mode-<?php echo $cat['category_id']; ?>">
+                            <tr class="hover:bg-gray-50 cursor-pointer"
+                                onclick="window.location='edit_category.php?id=<?php echo $cat['category_id']; ?>'">
+                                <td class="px-4 py-3 font-medium text-gray-700">
                                     <?php echo htmlspecialchars($cat['category_name']); ?>
                                 </td>
-                                <td class="px-4 py-3 text-right view-mode-<?php echo $cat['category_id']; ?>">
-                                    <button onclick="startEdit(<?php echo $cat['category_id']; ?>)"
-                                            class="text-blue-600 hover:text-blue-800 font-medium mr-3">
-                                        Edit
-                                    </button>
-                                    <!-- Delete form -->
-                                    <form method="POST" action="" class="inline"
-                                          onsubmit="return confirm('Delete \'<?php echo addslashes(htmlspecialchars($cat['category_name'])); ?>\'? This cannot be undone.');">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="category_id" value="<?php echo $cat['category_id']; ?>">
-                                        <button type="submit"
-                                                class="text-red-500 hover:text-red-700 font-medium">
-                                            Delete
-                                        </button>
-                                    </form>
-                                </td>
-
-                                <!-- Edit mode (hidden by default) -->
-                                <td colspan="2" class="px-4 py-2 edit-mode-<?php echo $cat['category_id']; ?> hidden">
-                                    <form method="POST" action="" class="flex gap-2 items-center">
-                                        <input type="hidden" name="action" value="edit">
-                                        <input type="hidden" name="category_id" value="<?php echo $cat['category_id']; ?>">
-                                        <input type="text"
-                                               name="category_name"
-                                               value="<?php echo htmlspecialchars($cat['category_name']); ?>"
-                                               required
-                                               maxlength="25"
-                                               class="flex-1 px-3 py-1.5 border border-blue-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        <button type="submit"
-                                                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 px-3 rounded text-sm">
-                                            Save
-                                        </button>
-                                        <button type="button"
-                                                onclick="cancelEdit(<?php echo $cat['category_id']; ?>)"
-                                                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1.5 px-3 rounded text-sm">
-                                            Cancel
-                                        </button>
-                                    </form>
-                                </td>
-
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -206,17 +143,5 @@ try {
     </div>
 
     <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
-    <script>
-        function startEdit(id) {
-            document.querySelectorAll('.view-mode-' + id).forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.edit-mode-' + id).forEach(el => el.classList.remove('hidden'));
-            document.querySelector('.edit-mode-' + id + ' input[type="text"]').focus();
-        }
-
-        function cancelEdit(id) {
-            document.querySelectorAll('.edit-mode-' + id).forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.view-mode-' + id).forEach(el => el.classList.remove('hidden'));
-        }
-    </script>
 </body>
 </html>
