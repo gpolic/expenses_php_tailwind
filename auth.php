@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && password_verify($_POST['password'], $user['password'])) {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
-            header("Location: index.php");
+            header("Location: add_record.php");
             exit();
         } else {
             header("Location: login.php");

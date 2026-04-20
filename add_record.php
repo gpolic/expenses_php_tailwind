@@ -83,7 +83,7 @@ try {
                 <?php } ?>
                 <a href="index.php"
                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                    Back to List
+                    Expenses List
                 </a>
             </div>
         </div>
