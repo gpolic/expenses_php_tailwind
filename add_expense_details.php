@@ -3,6 +3,7 @@ require_once 'session_check.php';
 require_once 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
     try {
         $sql = "INSERT INTO expenses (category_id, expense_amount, created_at, expense_description)
                 VALUES (:category, :amount, NOW(), :description)";
@@ -76,6 +77,7 @@ try {
         
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
             <form method="POST" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <input type="hidden" name="category" value="<?php echo $category['category_id']; ?>">
                 
                 <div>

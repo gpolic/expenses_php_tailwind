@@ -9,6 +9,7 @@ if (!$category_id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
     if (isset($_POST['delete'])) {
         try {
             $checkStmt = $pdo->prepare("SELECT COUNT(*) as cnt FROM expenses WHERE category_id = :id");
@@ -87,6 +88,7 @@ try {
 
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
             <form method="POST" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Category Name</label>
                     <input type="text"
@@ -117,6 +119,7 @@ try {
             </form>
 
             <form id="deleteForm" method="POST" class="hidden">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <input type="hidden" name="delete" value="1">
             </form>
         </div>

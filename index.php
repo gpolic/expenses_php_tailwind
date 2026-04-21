@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
 require_once 'session_check.php';
+require_once 'config.php';
 
 
 // Get current month's total expenses

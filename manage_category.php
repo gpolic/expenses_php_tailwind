@@ -4,6 +4,7 @@ require_once 'config.php';
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
     $action = $_POST['action'] ?? '';
 
     if ($action === 'add') {
@@ -92,6 +93,7 @@ try {
         <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
             <h2 class="text-base font-semibold text-gray-800 mb-4">Add New Category</h2>
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <input type="hidden" name="action" value="add">
                 <div class="flex gap-2">
                     <input type="text"

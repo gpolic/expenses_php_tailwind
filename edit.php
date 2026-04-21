@@ -2,6 +2,10 @@
 require_once 'config.php';
 require_once 'session_check.php';
   
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
+}
+
 if (isset($_POST['delete'])) {
     try {
         $stmt = $pdo->prepare("DELETE FROM expenses WHERE expense_id = :id");
@@ -9,11 +13,10 @@ if (isset($_POST['delete'])) {
         header("Location: index.php");
         exit();
     } catch(PDOException $e) {
-        die("Delete failed: " . $e->getMessage());
+        die("Delete failed.");
     }
 }
 
-  
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $sql = "UPDATE expenses SET
@@ -31,12 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':category' => $_POST['category'],
             ':id' => $_POST['id']
         ]);
-        
+
         header("Location: index.php");
         exit();
     } catch(PDOException $e) {
-        die("Update failed: " . $e->getMessage());
+        die("Update failed.");
     }
+}
+
+$expense_id = (int)($_GET['id'] ?? 0);
+if (!$expense_id) {
+    header("Location: index.php");
+    exit();
 }
 
 try {
@@ -44,12 +53,17 @@ try {
     $stmt = $pdo->prepare("SELECT e.*, c.category_name FROM expenses e
             JOIN expense_categories c ON e.category_id = c.category_id
             WHERE e.expense_id = :id");
-    $stmt->execute([':id' => $_GET['id']]);
+    $stmt->execute([':id' => $expense_id]);
     $expense = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$expense) {
+        header("Location: index.php");
+        exit();
+    }
 
     // Fetch categories for dropdown
     $categories = $pdo->query("SELECT * FROM expense_categories");
-    
+
     // Fetch top 3 descriptions for this category
     $stmt = $pdo->prepare("
         SELECT expense_description, COUNT(*) as count
@@ -62,7 +76,7 @@ try {
     $stmt->execute([':category' => $expense['category_id']]);
     $topDescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch(PDOException $e) {
-    die("Query failed: " . $e->getMessage());
+    die("Query failed.");
 }
 ?>
 
@@ -89,6 +103,7 @@ try {
         
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
             <form method="POST" class="space-y-4" id="expenseForm">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <input type="hidden" name="id" value="<?php echo $expense['expense_id']; ?>">
                 
                 <div>
@@ -159,6 +174,7 @@ try {
 
             <!-- Hidden delete form -->
             <form id="deleteForm" method="POST" class="hidden">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <input type="hidden" name="id" value="<?php echo $expense['expense_id']; ?>">
                 <input type="hidden" name="delete" value="1">
             </form>

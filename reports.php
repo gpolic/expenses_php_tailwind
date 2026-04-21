@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
 require_once 'session_check.php';
+require_once 'config.php';
 
 // Get last 12 completed months of expense data (excluding current month)
 try {
