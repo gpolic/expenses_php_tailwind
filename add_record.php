@@ -66,7 +66,8 @@ try {
 
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8 max-w-2xl">
+    <?php require_once 'nav.php'; ?>
+    <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Select Category</h1>
             <div class="flex gap-2">
@@ -81,10 +82,6 @@ try {
                         Show Less
                     </a>
                 <?php } ?>
-                <a href="index.php"
-                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                    Expenses List
-                </a>
             </div>
         </div>
         
@@ -107,7 +104,7 @@ try {
                 </a>
             </div>
         </div>
-    </div>
+    </main>
   <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
 
 </body>

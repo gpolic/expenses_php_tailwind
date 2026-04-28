@@ -72,12 +72,10 @@ try {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8 max-w-2xl">
+    <?php require_once 'nav.php'; ?>
+    <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Edit Category</h1>
-            <a href="manage_category.php" class="text-blue-500 hover:text-blue-700 text-sm font-medium">
-                &larr; Back to Categories
-            </a>
         </div>
 
         <?php if (isset($error_message)): ?>
@@ -123,7 +121,7 @@ try {
                 <input type="hidden" name="delete" value="1">
             </form>
         </div>
-    </div>
+    </main>
 
     <script>
     function confirmDelete() {

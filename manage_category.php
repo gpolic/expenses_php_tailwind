@@ -67,14 +67,12 @@ try {
   
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8 max-w-2xl">
+    <?php require_once 'nav.php'; ?>
+    <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
 
         <!-- Header -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Manage Categories</h1>
-            <a href="index.php" class="text-blue-500 hover:text-blue-700 text-sm font-medium">
-                &larr; Back to List
-            </a>
         </div>
 
         <!-- Flash messages -->
@@ -142,7 +140,7 @@ try {
             <?php endif; ?>
         </div>
 
-    </div>
+    </main>
 
     <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
 </body>

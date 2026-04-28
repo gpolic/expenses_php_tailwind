@@ -111,20 +111,11 @@ try {
   
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        
+    <?php require_once 'nav.php'; ?>
+    <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6">
+
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Expense Reports</h1>
-            <div class="flex gap-2 w-full sm:w-auto">
-                <a href="index.php"
-                   class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                    Back to List
-                </a>
-                <a href="logout.php"
-                   class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                    Logout
-                </a>
-            </div>
         </div>
 
         <!-- Summary Cards -->
@@ -191,7 +182,7 @@ try {
             </div>
         </div>
 
-    </div>
+    </main>
 
     <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
     <script>

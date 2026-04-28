@@ -92,13 +92,10 @@ try {
 
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8 max-w-2xl">
+    <?php require_once 'nav.php'; ?>
+    <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Edit Expense</h1>
-            <a href="index.php"
-               class="text-blue-500 hover:text-blue-70 text-sm sm:text-base font-medium self-center">
-                Back to List
-            </a>
         </div>
         
         <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
@@ -179,7 +176,7 @@ try {
                 <input type="hidden" name="delete" value="1">
             </form>
         </div>
-    </div>
+    </main>
 
     <script>
     function confirmDelete() {

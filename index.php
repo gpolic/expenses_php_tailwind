@@ -71,12 +71,12 @@ try {
   
 
 try {
-    // Fetch last 50 expense records with category descriptions
+    // Fetch first 20 expense records with category descriptions
   $sql = "SELECT e.*, ec.category_name
     FROM expenses e
     JOIN expense_categories ec ON e.category_id = ec.category_id
     ORDER BY e.created_at DESC
-    LIMIT 50";
+    LIMIT 20";
             
     $stmt = $pdo->query($sql);
 } catch(PDOException $e) {
@@ -98,46 +98,18 @@ try {
 
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-  
-        
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Expenses Tracker</h1>
-        <div class="flex gap-2 w-full sm:w-auto">
-          <!-- Desktop navigation: show 3 buttons -->
-          <div class="hidden sm:flex gap-2 w-auto">
-            <a href="add_record.php"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-              Add Record
-            </a>
-            <a href="reports.php"
-            class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-              Reports
-            </a>
-            <a href="logout.php"
-            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-              Logout
-            </a>
-          </div>
-          
-          <!-- Mobile navigation: Add Record, Reports and Logout -->
-          <div class="sm:hidden flex gap-2 w-full">
-            <a href="add_record.php"
-            class="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-              Add Record
-            </a>
-            <a href="reports.php"
-            class="flex-1 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-              Reports
-            </a>
-            <a href="logout.php"
-            class="flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-              Logout
-            </a>
-          </div>
+    <?php require_once 'nav.php'; ?>
+
+    <!-- Mobile sticky mini-header -->
+    <div id="sticky-header" class="sm:hidden fixed top-0 left-0 right-0 z-40 bg-white/75 backdrop-blur-lg backdrop-saturate-150 border-b border-gray-200/60 -translate-y-full transition-transform duration-300 ease-out">
+        <div class="container mx-auto px-4 h-12 flex items-center">
+            <span class="text-base font-semibold text-gray-900">Expenses</span>
         </div>
-      </div>
-      
+    </div>
+
+    <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6">
+      <h1 id="page-title" class="text-3xl font-bold tracking-tight text-gray-900 mb-4">Expenses</h1>
+
       <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div class="flex items-center gap-3">
           <div>
@@ -157,13 +129,12 @@ try {
       </div>
       
       <!-- Mobile: card list -->
-      <div class="sm:hidden flex flex-col gap-2">
+      <div id="mobile-list" class="sm:hidden flex flex-col gap-2">
         <?php
-        $alt = false;
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach($rows as $row):
         ?>
-        <div class="<?php echo $alt ? 'bg-gray-50' : 'bg-white'; ?> rounded-lg shadow-sm p-3 flex flex-col gap-1 cursor-pointer active:bg-blue-50"
+        <div class="odd:bg-white even:bg-gray-50 rounded-lg shadow-sm p-3 flex flex-col gap-1 cursor-pointer active:bg-blue-50"
              onclick="editExpense(<?php echo $row['expense_id']; ?>)">
           <div class="flex justify-between items-start">
             <span class="text-sm font-bold text-gray-800"><?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?></span>
@@ -174,7 +145,7 @@ try {
             <span class="text-sm font-bold text-blue-600"><?php echo number_format($row['expense_amount'], 2, '.', ''); ?>€</span>
           </div>
         </div>
-        <?php $alt = !$alt; endforeach; ?>
+        <?php endforeach; ?>
       </div>
 
       <!-- Desktop: table -->
@@ -188,28 +159,127 @@ try {
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200">
-            <?php
-            $alt = false;
-            foreach($rows as $row):
-            ?>
-            <tr class="<?php echo $alt ? 'bg-gray-50' : 'bg-white'; ?> hover:bg-blue-50 transition-colors cursor-pointer"
+          <tbody id="desktop-list" class="divide-y divide-gray-200">
+            <?php foreach($rows as $row): ?>
+            <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition-colors cursor-pointer"
                 onclick="editExpense(<?php echo $row['expense_id']; ?>)">
               <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars(date('d/m/Y', strtotime($row['created_at']))); ?></td>
               <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars($row['category_name']); ?></td>
               <td class="px-6 py-4 text-sm text-right"><?php echo number_format($row['expense_amount'], 2, '.', ''); ?></td>
               <td class="px-6 py-4 text-sm"><?php echo htmlspecialchars($row['expense_description']); ?></td>
             </tr>
-            <?php $alt = !$alt; endforeach; ?>
+            <?php endforeach; ?>
           </tbody>
         </table>
       </div>
+
+      <div id="sentinel" class="h-4 w-full"></div>
+      <div id="loading-indicator" class="hidden text-center py-4 text-gray-500 text-sm">Loading more...</div>
+      <div id="end-message" class="hidden text-center py-4 text-gray-500 text-sm">No more expenses</div>
       
-    </div>
+    </main>
 
     <script>
     function editExpense(id) {
         window.location.href = `edit.php?id=${id}`;
+    }
+
+    let currentOffset = <?= count($rows) ?>;
+    const limit = 20;
+    let isLoading = false;
+    let hasMore = true;
+
+    const sentinel = document.getElementById('sentinel');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const endMessage = document.getElementById('end-message');
+    const mobileList = document.getElementById('mobile-list');
+    const desktopList = document.getElementById('desktop-list');
+
+    async function loadMore() {
+        if (isLoading || !hasMore) return;
+        isLoading = true;
+        loadingIndicator.classList.remove('hidden');
+        try {
+            const res = await fetch(`api_expenses.php?offset=${currentOffset}&limit=${limit}`);
+            if (!res.ok) throw new Error('Network response was not ok');
+            const data = await res.json();
+            if (!Array.isArray(data)) {
+                hasMore = false;
+                console.error('Unexpected response', data);
+                return;
+            }
+            if (data.length === 0) {
+                hasMore = false;
+                endMessage.classList.remove('hidden');
+                observer.unobserve(sentinel);
+            } else {
+                appendRows(data);
+                currentOffset += data.length;
+            }
+        } catch (e) {
+            console.error('Failed to load more expenses:', e);
+        } finally {
+            isLoading = false;
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+    function appendRows(rows) {
+        rows.forEach(row => {
+            // Mobile card
+            const card = document.createElement('div');
+            card.className = 'odd:bg-white even:bg-gray-50 rounded-lg shadow-sm p-3 flex flex-col gap-1 cursor-pointer active:bg-blue-50';
+            card.onclick = () => editExpense(row.expense_id);
+            card.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-bold text-gray-800">${row.date}</span>
+                    <span class="text-xs text-gray-500">${row.expense_description}</span>
+                </div>
+                <div class="flex justify-between items-end">
+                    <span class="text-sm text-gray-800">${row.category_name}</span>
+                    <span class="text-sm font-bold text-blue-600">${row.expense_amount}€</span>
+                </div>
+            `;
+            mobileList.appendChild(card);
+
+            // Desktop row
+            const tr = document.createElement('tr');
+            tr.className = 'odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition-colors cursor-pointer';
+            tr.onclick = () => editExpense(row.expense_id);
+            tr.innerHTML = `
+                <td class="px-6 py-4 text-sm">${row.date}</td>
+                <td class="px-6 py-4 text-sm">${row.category_name}</td>
+                <td class="px-6 py-4 text-sm text-right">${row.expense_amount}</td>
+                <td class="px-6 py-4 text-sm">${row.expense_description}</td>
+            `;
+            desktopList.appendChild(tr);
+        });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadMore();
+        }
+    }, { rootMargin: '200px' });
+
+    if (sentinel) {
+        observer.observe(sentinel);
+    }
+
+    // Sticky mini-header IntersectionObserver
+    const pageTitle = document.getElementById('page-title');
+    const stickyHeader = document.getElementById('sticky-header');
+    if (pageTitle && stickyHeader) {
+        const titleObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    stickyHeader.classList.add('-translate-y-full');
+                } else {
+                    stickyHeader.classList.remove('-translate-y-full');
+                }
+            });
+        }, { threshold: 0 });
+        titleObserver.observe(pageTitle);
     }
     </script>
   <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
