@@ -116,25 +116,18 @@ try {
             </h2>
 
             <?php if (count($categories) > 0): ?>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <?php foreach ($categories as $cat): ?>
-                            <tr class="hover:bg-gray-50 cursor-pointer"
-                                onclick="window.location='edit_category.php?id=<?php echo $cat['category_id']; ?>'">
-                                <td class="px-4 py-3 font-medium text-gray-700">
-                                    <?php echo htmlspecialchars($cat['category_name']); ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                <ul class="flex flex-col gap-2">
+                    <?php foreach ($categories as $cat): ?>
+                    <li>
+                        <a href="edit_category.php?id=<?php echo $cat['category_id']; ?>"
+                           class="flex items-center bg-gray-50 hover:bg-blue-50 active:bg-blue-100 rounded-lg px-4 py-3 min-h-[48px] transition-colors">
+                            <span class="font-medium text-gray-700 text-sm">
+                                <?php echo htmlspecialchars($cat['category_name']); ?>
+                            </span>
+                        </a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
             <?php else: ?>
                 <p class="text-gray-500 text-center py-6 text-sm">No categories found.</p>
             <?php endif; ?>
