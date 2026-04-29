@@ -115,7 +115,7 @@ try {
     <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6">
 
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Expense Reports</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Reports</h1>
         </div>
 
         <!-- Summary Cards -->

@@ -150,22 +150,23 @@ try {
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4">
-                    <div class="flex gap-3 w-full sm:w-auto">
-                        <button type="submit" 
-                                class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
-                            Save Changes
-                        </button>
-                        <button type="button" 
-                                onclick="confirmDelete()"
-                                class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-8 rounded">
-                            Delete
-                        </button>
-                    </div>
-                    <a href="index.php" 
-                       class="w-full sm:w-auto text-center text-gray-500 hover:text-gray-700 font-bold py-2 px-4">
+                <div class="flex items-center justify-between gap-3 pt-4">
+                    <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
+                        Save Changes
+                    </button>
+                    <a href="index.php"
+                       class="text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-8 rounded">
                         Cancel
                     </a>
+                </div>
+
+                <div class="pt-8 mt-4 border-t border-gray-200 flex justify-center">
+                    <button type="button"
+                            onclick="confirmDelete()"
+                            class="border border-red-500 text-red-600 hover:bg-red-50 font-bold py-2 px-8 rounded">
+                        Delete
+                    </button>
                 </div>
             </form>
 

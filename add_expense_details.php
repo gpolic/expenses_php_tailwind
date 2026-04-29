@@ -31,7 +31,7 @@ try {
     $category = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$category) {
-        header("Location: add_record.php");
+        header("Location: select_category.php");
         exit();
     }
 

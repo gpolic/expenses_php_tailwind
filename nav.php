@@ -3,7 +3,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 // Active state helpers
 $isExpenses = in_array($currentPage, ['index.php', 'edit.php']);
-$isAdd = in_array($currentPage, ['add_record.php', 'add_expense_details.php']);
+$isAdd = in_array($currentPage, ['select_category.php', 'add_expense_details.php']);
 $isReports = $currentPage === 'reports.php';
 $isCategories = in_array($currentPage, ['manage_category.php', 'edit_category.php']);
 $isProfile = $currentPage === 'profile.php';
@@ -18,7 +18,7 @@ $isProfile = $currentPage === 'profile.php';
                 <a href="index.php" class="text-sm font-medium <?php echo $isExpenses ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'; ?>">
                     Expenses
                 </a>
-                <a href="add_record.php" class="text-sm font-medium <?php echo $isAdd ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'; ?>">
+                <a href="select_category.php" class="text-sm font-medium <?php echo $isAdd ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'; ?>">
                     Add Record
                 </a>
                 <a href="reports.php" class="text-sm font-medium <?php echo $isReports ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'; ?>">
@@ -37,7 +37,7 @@ $isProfile = $currentPage === 'profile.php';
 
 <!-- Mobile FAB: Add new record (hidden on add pages) -->
 <?php if (!$isAdd): ?>
-<a href="add_record.php" aria-label="Add new record"
+<a href="select_category.php" aria-label="Add new record"
    class="sm:hidden fixed right-4 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 active:bg-blue-700 text-white shadow-lg"
    style="bottom: calc(env(safe-area-inset-bottom) + 72px);">
     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

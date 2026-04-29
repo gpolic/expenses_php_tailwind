@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['last_activity'] = time();
-            header("Location: add_record.php");
+            header("Location: select_category.php");
             exit();
         } else {
             header("Location: login.php");

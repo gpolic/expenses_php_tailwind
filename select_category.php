@@ -85,12 +85,18 @@ try {
             </div>
         </div>
         
-        <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
+        <div class="bg-white/60 rounded-2xl p-3 sm:p-6">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <?php foreach($displayCategories as $category) { ?>
                     <a href="add_expense_details.php?category=<?php echo $category['category_id']; ?>"
-                       class="block p-2 sm:p-4 border rounded-lg hover:bg-blue-50 text-center transition-colors">
-                        <span class="text-sm sm:text-base font-medium text-gray-700">
+                       class="flex items-center justify-center text-center
+                              bg-white hover:bg-blue-50
+                              border border-gray-100
+                              rounded-2xl shadow-sm
+                              active:scale-95
+                              p-3 sm:p-4
+                              transition-colors duration-150">
+                        <span class="text-sm sm:text-base font-medium text-gray-700 leading-tight">
                             <?php echo htmlspecialchars($category['category_name']); ?>
                         </span>
                     </a>
