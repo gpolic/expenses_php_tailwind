@@ -75,7 +75,7 @@ try {
     <?php require_once 'nav.php'; ?>
     <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Edit Category</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Edit Category</h1>
         </div>
 
         <?php if (isset($error_message)): ?>

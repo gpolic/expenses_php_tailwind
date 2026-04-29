@@ -108,7 +108,7 @@ try {
     </div>
 
     <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6">
-      <h1 id="page-title" class="text-3xl font-bold tracking-tight text-gray-900 mb-4">Expenses</h1>
+      <h1 id="page-title" class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Expenses</h1>
 
       <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div class="flex items-center gap-3">
