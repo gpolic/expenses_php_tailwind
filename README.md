@@ -1,95 +1,130 @@
 # Expenses PHP Tailwind
 
-A mobile friendly web application for tracking personal expenses built with PHP and styled with Tailwind CSS. This application uses a MySQL database hosted on Aiven.io and includes comprehensive reporting features with interactive charts.
+Mobile-friendly web app for tracking personal expenses, with interactive charts/reports.Built with PHP and styled with Tailwind CSS. Backed by MySQL.
 
 ## Features
 
-- **Expense Tracking**: Add, edit, and delete personal expenses with categories
-- **Interactive Reports**: View expense trends and category analysis with charts
-- **Mobile Friendly**: Responsive design optimized for mobile devices
-- **User Authentication**: Secure login system
-- **Category Management**: Organize expenses by customizable categories
-- **Chart Analytics**:
-  - Monthly expense trends (last 12 months)
-  - Average spending lines with trend analysis
-  - Top 10 expense categories bar chart
+- **Expense Tracking**: Add, edit, and delete expenses with categories
+- **2-Step Add Flow**: Pick category, then enter amount/description — designed for ~3 taps on mobile
+- **Dashboard**: Month-to-date total with % change vs. the same day range of the previous month, plus an infinite-scroll list of recent expenses
+- **Interactive Reports**: 12-month trend line, average and linear-regression trend overlays, top-10 categories bar chart
+- **Category Management**: Add, rename, and delete categories (delete blocked while expenses are linked)
+- **Mobile-First UI**: Bottom tab bar, floating Add button (FAB), collapsing sticky header on the dashboard
+- **User Authentication**: Session-based login with 8h inactivity timeout, bcrypt password hashing, and CSRF protection on all state-changing requests
 
 ## Prerequisites
 
-- PHP 7.4 or higher
-- Web server with PHP support (Apache, Nginx, etc.)
-- MySQL database (hosted on Aiven.io or elsewhere)
-- Git (for cloning the repository)
+- PHP 7.4 or higher with `pdo_mysql`
+- MySQL 5.7+ (local) or a managed MySQL service (e.g., Aiven.io)
+- Web server with PHP support (Apache, Nginx, or `php -S` for local dev)
+- Git
 
 ## Installation
 
 1. Clone the repository:
 
-git clone https://github.com/gpolic/expenses_php_tailwind.git
+   ```bash
+   git clone https://github.com/gpolic/expenses_php_tailwind.git
+   cd expenses_php_tailwind
+   ```
 
-2. Navigate to the project directory:
+2. Create the database and import the schema:
 
-3. Configure your database connection (see Database Configuration section below).
+   ```bash
+   mysql -u root -p -e "CREATE DATABASE expenses_db"
+   mysql -u root -p expenses_db < database.sql
+   ```
 
-4. Deploy to your web server or run locally
+3. Configure database access (see below).
 
+4. Serve the project:
 
-5. The application automatically shows the 12 most frequently used categories from the past 3 months on the Add Record page
+   ```bash
+   php -S localhost:8000
+   ```
+
+5. Open `http://localhost:8000` and log in with `admin` / `admin`. Change the password after first login.
 
 ## Database Configuration
-This application uses Aiven.io as MySQL cloud database. To configure your database connection:
 
-1. Create a MySQL database service on [Aiven.io](https://aiven.io/)
+`config.php` is gitignored. Copy `config - UPDATE THIS.php` to `config.php` and fill in credentials.
 
-2. From your Aiven console, obtain the following credentials:
-   - Database host/endpoint
-   - Database name
-   - Username
-   - Password
-   - Port (usually 3306)
-   - Download the SSL certificate (ca.pem) from the Overview page of your service
+**Local dev**:
 
-3. Create a `config.php` file in the root directory with the indicated structure
+```php
+$servername = "localhost";
+$username   = "root";
+$password   = "";
+$dbname     = "expenses_db";
+$port       = 3306;
+```
 
-4. Execute the `database.sql` file in your MySQL database to create the required tables
-
-5. Setup your server with all application files. Open your web site URL and login with admin/admin
-
-6. Login using admin/admin to start tracking your expenses
+**Production (Aiven.io)**: download the `ca.pem` SSL certificate from the Aiven service overview and reference it in `config.php`.
 
 ## Database Schema
 
-The application uses the following tables:
-
 ### `expenses`
-- `expense_id` - Primary key
-- `category_id` - Foreign key to expense_categories
-- `expense_amount` - Expense amount (decimal)
-- `created_at` - Expense date and time
-- `expense_description` - Optional description
-- `updated_at` - Auto-updated timestamp
+- `expense_id` — primary key
+- `category_id` — foreign key to `expense_categories`
+- `expense_amount` — decimal(19,4)
+- `created_at` — expense date/time
+- `expense_description` — varchar(50)
+- `updated_at` — auto-updated timestamp
 
 ### `expense_categories`
-- `category_id` - Primary key
-- `category_name` - Category name
+- `category_id` — primary key
+- `category_name` — varchar(25)
 
 ### `users`
-- `user_id` - Primary key
-- `username` - User login name
-- `password` - Hashed password
+- `id` — primary key
+- `username` — unique
+- `password` — bcrypt hash (`password_hash()` / `password_verify()`)
+
+## Project Structure
+
+| File | Purpose |
+|------|---------|
+| `index.php` | Dashboard with month total and infinite-scroll expense list |
+| `api_expenses.php` | JSON endpoint for paginated expenses (used by dashboard scroll) |
+| `select_category.php` | Add flow — step 1, pick category |
+| `add_expense_details.php` | Add flow — step 2, amount/description/date |
+| `edit.php` | Edit or delete an existing expense |
+| `manage_category.php` | Category list / add new category |
+| `edit_category.php` | Rename or delete a category |
+| `reports.php` | Charts and analytics |
+| `profile.php` | Mobile profile page (settings, logout) |
+| `nav.php` | Shared navigation: desktop top bar, mobile tab bar, mobile FAB |
+| `login.php`, `auth.php`, `logout.php` | Auth pages and handlers |
+| `session_check.php` | Auth guard, session timeout, CSRF helpers |
+| `database.sql` | Schema with FK constraints and default admin user |
+| `styles.css` | Global CSS overrides |
 
 ## Navigation
 
-- **Dashboard**: View recent expenses and monthly totals
-- **Add Record**: Add new expenses by category
-- **Reports**: Interactive charts and analytics
-- **Edit/Delete**: Modify existing expense records
+- **Expenses** — dashboard / recent expenses
+- **Add Record** — 2-step add flow
+- **Reports** — charts and analytics
+- **Categories** (desktop) / **Profile** (mobile) — category management, logout
 
-## Reports Features
+## Reports
 
 The Reports page provides:
-- **Monthly Trend Chart**: Line chart showing expenses over the last 12 completed months
-- **Average Line**: Shows average monthly spending with exact figure
-- **Trend Analysis**: Linear regression trend line indicating spending direction
-- **Category Analysis**: Bar chart of top 10 expense categories by total amount
-- **Summary Cards**: Key metrics including averages, totals, and trend indicators
+
+- **Monthly Trend Chart**: line chart of expenses over the last 12 completed months
+- **Average Line**: mean monthly spending
+- **Trend Analysis**: linear-regression trend line indicating spending direction
+- **Category Analysis**: bar chart of top-10 categories by total amount
+- **Summary Cards**: averages, totals, and trend indicators
+
+## Security
+
+- PDO with prepared statements throughout
+- `htmlspecialchars()` on all output of user-provided strings
+- CSRF token (`session_check.php`) required on every POST handler
+- 8-hour session inactivity timeout
+- HttpOnly + SameSite=Strict cookies; Secure flag set when served over HTTPS
+- Passwords stored with `password_hash()` (bcrypt)
+
+## License
+
+See [LICENSE](LICENSE).
