@@ -15,20 +15,9 @@ require_once 'config.php';
 <body class="bg-gray-50">
     <?php require_once 'nav.php'; ?>
     <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Profile</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Logout</h1>
 
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-            <a href="manage_category.php" class="flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50">
-                <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                    </svg>
-                    <span class="text-gray-800 font-medium">Manage Categories</span>
-                </div>
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-            </a>
             <a href="logout.php" class="flex items-center justify-between p-4 hover:bg-gray-50">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

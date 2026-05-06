@@ -103,12 +103,6 @@ try {
                 <?php } ?>
             </div>
 
-            <div class="mt-6 text-center">
-                <a href="manage_category.php"
-                   class="inline-block bg-green-500 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded">
-                    Manage Categories
-                </a>
-            </div>
         </div>
     </main>
   <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>

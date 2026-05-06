@@ -9,7 +9,7 @@ Mobile-friendly web app for tracking personal expenses, with interactive charts/
 - **Dashboard**: Month-to-date total with % change vs. the same day range of the previous month, plus an infinite-scroll list of recent expenses
 - **Interactive Reports**: 12-month trend line, average and linear-regression trend overlays, top-10 categories bar chart
 - **Category Management**: Add, rename, and delete categories (delete blocked while expenses are linked)
-- **Mobile-First UI**: Bottom tab bar, floating Add button (FAB), collapsing sticky header on the dashboard
+- **Mobile-First UI**: Bottom tab bar, context-aware FAB (add expense or add category depending on current page), collapsing sticky header on dashboard and categories pages
 - **User Authentication**: Session-based login with 8h inactivity timeout, bcrypt password hashing, and CSRF protection on all state-changing requests
 
 ## Prerequisites
@@ -89,11 +89,12 @@ $port       = 3306;
 | `select_category.php` | Add flow — step 1, pick category |
 | `add_expense_details.php` | Add flow — step 2, amount/description/date |
 | `edit.php` | Edit or delete an existing expense |
-| `manage_category.php` | Category list / add new category |
+| `manage_category.php` | Category list — sticky mini-header on mobile, tap row to edit |
+| `add_category.php` | Add new category — dedicated page, redirects on success |
 | `edit_category.php` | Rename or delete a category |
 | `reports.php` | Charts and analytics |
-| `profile.php` | Mobile profile page (settings, logout) |
-| `nav.php` | Shared navigation: desktop top bar, mobile tab bar, mobile FAB |
+| `profile.php` | Logout page |
+| `nav.php` | Shared navigation: desktop top bar, mobile tab bar, context-aware FAB |
 | `login.php`, `auth.php`, `logout.php` | Auth pages and handlers |
 | `session_check.php` | Auth guard, session timeout, CSRF helpers |
 | `database.sql` | Schema with FK constraints and default admin user |
@@ -104,7 +105,8 @@ $port       = 3306;
 - **Expenses** — dashboard / recent expenses
 - **Add Record** — 2-step add flow
 - **Reports** — charts and analytics
-- **Categories** (desktop) / **Profile** (mobile) — category management, logout
+- **Categories** — category list; FAB opens add category page
+- **Logout** (mobile tab) — logs out directly
 
 ## Reports
 

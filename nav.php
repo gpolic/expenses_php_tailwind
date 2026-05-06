@@ -5,7 +5,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $isExpenses = in_array($currentPage, ['index.php', 'edit.php']);
 $isAdd = in_array($currentPage, ['select_category.php', 'add_expense_details.php']);
 $isReports = $currentPage === 'reports.php';
-$isCategories = in_array($currentPage, ['manage_category.php', 'edit_category.php']);
+$isCategories = in_array($currentPage, ['manage_category.php', 'edit_category.php', 'add_category.php']);
 $isProfile = $currentPage === 'profile.php';
 ?>
 
@@ -35,9 +35,9 @@ $isProfile = $currentPage === 'profile.php';
     </div>
 </nav>
 
-<!-- Mobile FAB: Add new record (hidden on add pages) -->
-<?php if (!$isAdd): ?>
-<a href="select_category.php" aria-label="Add new record"
+<!-- Mobile FAB: Add new record (hidden on add pages, reports, and add category page) -->
+<?php if (!$isAdd && !$isReports && $currentPage !== 'add_category.php'): ?>
+<a href="<?php echo $isCategories ? 'add_category.php' : 'select_category.php'; ?>" aria-label="<?php echo $isCategories ? 'Add new category' : 'Add new record'; ?>"
    class="sm:hidden fixed right-4 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 active:bg-blue-700 text-white shadow-lg"
    style="bottom: calc(env(safe-area-inset-bottom) + 72px);">
     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -73,13 +73,13 @@ $isProfile = $currentPage === 'profile.php';
             </span>
             <span class="text-xs mt-1 <?php echo $isCategories ? 'font-semibold' : ''; ?>">Categories</span>
         </a>
-        <a href="profile.php" class="flex flex-col items-center justify-center py-2 <?php echo $isProfile ? 'text-blue-600' : 'text-gray-500'; ?>">
-            <span class="flex flex-col items-center px-3 py-1 rounded-full <?php echo $isProfile ? 'bg-blue-50' : ''; ?>">
+        <a href="logout.php" class="flex flex-col items-center justify-center py-2 text-gray-500">
+            <span class="flex flex-col items-center px-3 py-1 rounded-full">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                 </svg>
             </span>
-            <span class="text-xs mt-1 <?php echo $isProfile ? 'font-semibold' : ''; ?>">Profile</span>
+            <span class="text-xs mt-1">Logout</span>
         </a>
     </div>
 </nav>

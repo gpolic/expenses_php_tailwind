@@ -7,27 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
     $action = $_POST['action'] ?? '';
 
-    if ($action === 'add') {
-        try {
-            $category_name = trim($_POST['category_name']);
-            if (empty($category_name)) {
-                $error_message = "Category name cannot be empty.";
-            } else {
-                $checkStmt = $pdo->prepare("SELECT category_id FROM expense_categories WHERE category_name = :name");
-                $checkStmt->execute([':name' => $category_name]);
-                if ($checkStmt->rowCount() > 0) {
-                    $error_message = "Category '" . htmlspecialchars($category_name) . "' already exists.";
-                } else {
-                    $stmt = $pdo->prepare("INSERT INTO expense_categories (category_name) VALUES (:name)");
-                    $stmt->execute([':name' => $category_name]);
-                    $success_message = "Category '" . htmlspecialchars($category_name) . "' added successfully.";
-                }
-            }
-        } catch (PDOException $e) {
-            $error_message = "Error adding category: " . $e->getMessage();
-        }
-
-    } elseif ($action === 'delete') {
+    if ($action === 'delete') {
         try {
             $category_id = (int)$_POST['category_id'];
             $checkStmt = $pdo->prepare("SELECT COUNT(*) as cnt FROM expenses WHERE category_id = :id");
@@ -60,7 +40,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Categories</title>
+    <title>Categories</title>
     <link href="https://unpkg.com/flowbite@latest/dist/flowbite.min.css" rel="stylesheet" />
     <link href="styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -68,11 +48,19 @@ try {
 </head>
 <body class="bg-gray-50">
     <?php require_once 'nav.php'; ?>
+
+    <!-- Mobile sticky mini-header -->
+    <div id="sticky-header" class="sm:hidden fixed top-0 left-0 right-0 z-40 bg-white/75 backdrop-blur-lg backdrop-saturate-150 border-b border-gray-200/60 -translate-y-full transition-transform duration-300 ease-out">
+        <div class="container mx-auto px-4 h-12 flex items-center">
+            <span class="text-base font-semibold text-gray-900">Categories</span>
+        </div>
+    </div>
+
     <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
 
         <!-- Header -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Manage Categories</h1>
+            <h1 id="page-title" class="text-2xl sm:text-3xl font-bold text-gray-800">Categories</h1>
         </div>
 
         <!-- Flash messages -->
@@ -86,27 +74,6 @@ try {
                 <?php echo $success_message; ?>
             </div>
         <?php endif; ?>
-
-        <!-- Add Category -->
-        <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
-            <h2 class="text-base font-semibold text-gray-800 mb-4">Add New Category</h2>
-            <form method="POST" action="">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
-                <input type="hidden" name="action" value="add">
-                <div class="flex gap-2">
-                    <input type="text"
-                           name="category_name"
-                           required
-                           maxlength="25"
-                           placeholder="Category name (max 25 chars)"
-                           class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm">
-                        Add
-                    </button>
-                </div>
-            </form>
-        </div>
 
         <!-- Categories Table -->
         <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6">
@@ -136,5 +103,21 @@ try {
     </main>
 
     <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
+    <script>
+    const pageTitle = document.getElementById('page-title');
+    const stickyHeader = document.getElementById('sticky-header');
+    if (pageTitle && stickyHeader) {
+        const titleObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    stickyHeader.classList.add('-translate-y-full');
+                } else {
+                    stickyHeader.classList.remove('-translate-y-full');
+                }
+            });
+        }, { threshold: 0 });
+        titleObserver.observe(pageTitle);
+    }
+    </script>
 </body>
 </html>
