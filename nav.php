@@ -36,7 +36,7 @@ $isProfile = $currentPage === 'profile.php';
 </nav>
 
 <!-- Mobile FAB: Add new record (hidden on add pages, reports, and add category page) -->
-<?php if (!$isAdd && !$isReports && $currentPage !== 'add_category.php'): ?>
+<?php if (!$isAdd && !$isReports && $currentPage !== 'add_category.php' && $currentPage !== 'edit.php'): ?>
 <a href="<?php echo $isCategories ? 'add_category.php' : 'select_category.php'; ?>" aria-label="<?php echo $isCategories ? 'Add new category' : 'Add new record'; ?>"
    class="sm:hidden fixed right-4 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 active:bg-blue-700 text-white shadow-lg"
    style="bottom: calc(env(safe-area-inset-bottom) + 72px);">
