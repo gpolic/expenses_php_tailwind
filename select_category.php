@@ -3,52 +3,15 @@ require_once 'session_check.php';
 require_once 'config.php';
 
 try {
-    // Get the 10 most frequent categories from the past 3 months
+    // All categories sorted by all-time record count (most used first, unused last)
     $sql = "SELECT ec.category_id, ec.category_name, COUNT(e.expense_id) as frequency
             FROM expense_categories ec
             LEFT JOIN expenses e ON ec.category_id = e.category_id
-            WHERE e.created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH) OR e.created_at IS NULL
             GROUP BY ec.category_id, ec.category_name
-            ORDER BY frequency DESC, ec.category_name
-            LIMIT 12";
-    
+            ORDER BY frequency DESC, ec.category_name";
+
     $stmt = $pdo->query($sql);
-    $topCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Get all categories
-    $stmt = $pdo->query("SELECT * FROM expense_categories ORDER BY category_name");
-    $allCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Check if there are any expense records
-    $checkRecordsStmt = $pdo->query("SELECT COUNT(*) as count FROM expenses");
-    $recordCount = $checkRecordsStmt->fetch(PDO::FETCH_ASSOC)['count'];
-    
-    // If no records exist, use all categories; otherwise use the top 10
-    if ($recordCount == 0) {
-        $defaultCategories = array_column($allCategories, 'category_id');
-    } else {
-        $defaultCategories = array_column($topCategories, 'category_id');
-    }
-    
-    // Filter for initial display
-    $showAll = isset($_GET['show_all']) && $_GET['show_all'] == 1;
-    
-    if ($showAll) {
-        $displayCategories = $allCategories;
-    } else {
-        // Create a lookup array to preserve the frequency order from topCategories
-        $categoryOrder = array_flip($defaultCategories);
-        
-        // Filter and sort the categories based on frequency order
-        $displayCategories = array_filter($allCategories, function($cat) use ($defaultCategories) {
-            return in_array($cat['category_id'], $defaultCategories);
-        });
-        
-        // Sort the filtered categories by the frequency order
-        usort($displayCategories, function($a, $b) use ($categoryOrder) {
-            return $categoryOrder[$a['category_id']] - $categoryOrder[$b['category_id']];
-        });
-    }
+    $displayCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch(PDOException $e) {
     die("Query failed: " . $e->getMessage());
 }
@@ -70,19 +33,6 @@ try {
     <main class="container mx-auto px-4 py-8 pb-20 sm:pb-6 max-w-2xl">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Select Category</h1>
-            <div class="flex gap-2">
-                <?php if (!$showAll) { ?>
-                    <a href="?show_all=1"
-                       class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                        Expand Categories
-                    </a>
-                <?php } else { ?>
-                    <a href="?"
-                       class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base flex items-center justify-center">
-                        Show Less
-                    </a>
-                <?php } ?>
-            </div>
         </div>
         
         <div class="bg-white/60 rounded-2xl p-3 sm:p-6">
