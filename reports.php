@@ -4,31 +4,36 @@ require_once 'config.php';
 
 // Get last 12 completed months of expense data (excluding current month)
 try {
-    $monthlyData = [];
     $currentDate = new DateTime('first day of this month');
+    $startDate = (clone $currentDate)->modify('-12 months');
 
+    // Single query instead of 12 — range filter uses created_at index
+    $sql = "SELECT YEAR(created_at) as yr, MONTH(created_at) as mo,
+                   SUM(expense_amount) as total
+            FROM expenses
+            WHERE created_at >= :startDate AND created_at < :endDate
+            GROUP BY YEAR(created_at), MONTH(created_at)
+            ORDER BY yr ASC, mo ASC";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':startDate' => $startDate->format('Y-m-d'),
+        ':endDate' => $currentDate->format('Y-m-d')
+    ]);
+
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $rowMap = [];
+    foreach ($rows as $row) {
+        $rowMap[$row['yr'] . '-' . (int)$row['mo']] = floatval($row['total']);
+    }
+
+    $monthlyData = [];
     for ($i = 12; $i >= 1; $i--) {
-        $date = clone $currentDate;
-        $date->modify("-$i months");
-        $month = $date->format('m');
-        $year = $date->format('Y');
-        $monthName = $date->format('M Y');
-        
-        $sql = "SELECT COALESCE(SUM(expense_amount), 0) as total
-                FROM expenses
-                WHERE MONTH(created_at) = :month
-                AND YEAR(created_at) = :year";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':month' => $month,
-            ':year' => $year
-        ]);
-        
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $date = (clone $currentDate)->modify("-$i months");
+        $key = $date->format('Y') . '-' . (int)$date->format('n');
         $monthlyData[] = [
-            'month' => $monthName,
-            'amount' => floatval($result['total'])
+            'month' => $date->format('M Y'),
+            'amount' => $rowMap[$key] ?? 0.0
         ];
     }
     
@@ -69,25 +74,22 @@ try {
 
 // Get top 10 expense categories by total amount for the same 12-month period
 try {
-    $currentDate = new DateTime();
-    $startDate = clone $currentDate;
-    $startDate->modify("-12 months");
-    $endDate = clone $currentDate;
-    $endDate->modify("-1 month")->modify("last day of this month");
-    
+    $catEnd = new DateTime('first day of this month');
+    $catStart = (clone $catEnd)->modify('-12 months');
+
     $categorySql = "SELECT ec.category_name as category, SUM(e.expense_amount) as total
                     FROM expenses e
                     JOIN expense_categories ec ON e.category_id = ec.category_id
                     WHERE e.created_at >= :startDate
-                    AND e.created_at <= :endDate
+                    AND e.created_at < :endDate
                     GROUP BY e.category_id, ec.category_name
                     ORDER BY total DESC
                     LIMIT 10";
-    
+
     $stmt = $pdo->prepare($categorySql);
     $stmt->execute([
-        ':startDate' => $startDate->format('Y-m-01'),
-        ':endDate' => $endDate->format('Y-m-t')
+        ':startDate' => $catStart->format('Y-m-d'),
+        ':endDate'   => $catEnd->format('Y-m-d')
     ]);
     
     $categoryData = $stmt->fetchAll(PDO::FETCH_ASSOC);
