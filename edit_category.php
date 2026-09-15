@@ -100,7 +100,7 @@ try {
                 <div class="flex items-center justify-between gap-3 pt-4">
                     <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
-                        Save Changes
+                        Save
                     </button>
                     <a href="manage_category.php"
                        class="text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-8 rounded">

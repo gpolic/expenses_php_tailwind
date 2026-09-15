@@ -111,7 +111,7 @@ try {
                 <div class="flex items-center justify-between pt-4">
                     <button type="submit" 
                             class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded text-sm sm:text-base">
-                        Save Expense
+                        Save
                     </button>
                 </div>
             </form>
