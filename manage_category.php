@@ -28,7 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fetch all categories
 try {
-    $stmt = $pdo->query("SELECT * FROM expense_categories ORDER BY category_name");
+    $stmt = $pdo->query("SELECT ec.category_id, ec.category_name, COUNT(e.expense_id) AS expense_count
+                         FROM expense_categories ec
+                         LEFT JOIN expenses e ON ec.category_id = e.category_id
+                         GROUP BY ec.category_id, ec.category_name
+                         ORDER BY ec.category_name");
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error_message = "Error fetching categories: " . $e->getMessage();
@@ -61,6 +65,13 @@ try {
         <!-- Header -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 id="page-title" class="text-2xl sm:text-3xl font-bold text-gray-800">Categories</h1>
+            <a href="add_category.php"
+               class="hidden sm:inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                Add Category
+            </a>
         </div>
 
         <!-- Flash messages -->
@@ -90,6 +101,9 @@ try {
                            class="flex items-center bg-gray-50 hover:bg-blue-50 active:bg-blue-100 rounded-lg px-4 py-3 min-h-[48px] transition-colors">
                             <span class="font-medium text-gray-700 text-sm">
                                 <?php echo htmlspecialchars($cat['category_name']); ?>
+                            </span>
+                            <span class="ml-auto text-sm text-gray-400">
+                                <?php echo (int)$cat['expense_count']; ?>
                             </span>
                         </a>
                     </li>

@@ -68,7 +68,7 @@ try {
     $stmt = $pdo->prepare("
         SELECT expense_description, COUNT(*) as count
         FROM expenses
-        WHERE category_id = :category
+        WHERE category_id = :category AND expense_description <> ''
         GROUP BY expense_description
         ORDER BY count DESC
         LIMIT 3
@@ -98,7 +98,7 @@ try {
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Edit Expense</h1>
         </div>
         
-        <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+        <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <form method="POST" class="space-y-4" id="expenseForm">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <input type="hidden" name="id" value="<?php echo $expense['expense_id']; ?>">
@@ -142,8 +142,8 @@ try {
                     <div class="flex flex-wrap gap-2">
                         <?php foreach($topDescriptions as $desc) { ?>
                             <button type="button"
-                                    onclick="setDescription('<?php echo htmlspecialchars($desc['expense_description']); ?>')"
-                                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded text-sm">
+                                    data-desc="<?php echo htmlspecialchars($desc['expense_description'], ENT_QUOTES); ?>"
+                                    class="desc-chip border border-blue-200 bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-700 font-medium py-2 px-4 rounded-full text-sm transition-transform">
                                 <?php echo htmlspecialchars($desc['expense_description']); ?>
                             </button>
                         <?php } ?>
@@ -152,11 +152,11 @@ try {
 
                 <div class="flex items-center justify-between gap-3 pt-4">
                     <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
+                            class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
                         Save
                     </button>
                     <a href="index.php"
-                       class="text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-8 rounded">
+                       class="flex-1 sm:flex-none text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-8 rounded">
                         Cancel
                     </a>
                 </div>
@@ -186,9 +186,11 @@ try {
         }
     }
     
-    function setDescription(text) {
-        document.getElementById('description').value = text;
-    }
+    document.querySelectorAll('.desc-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+            document.getElementById('description').value = chip.dataset.desc;
+        });
+    });
     </script>
   <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
 </body>

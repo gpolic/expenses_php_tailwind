@@ -84,7 +84,7 @@ try {
             </div>
         <?php endif; ?>
 
-        <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+        <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <form method="POST" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <div>
@@ -99,11 +99,11 @@ try {
 
                 <div class="flex items-center justify-between gap-3 pt-4">
                     <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
+                            class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
                         Save
                     </button>
                     <a href="manage_category.php"
-                       class="text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-8 rounded">
+                       class="flex-1 sm:flex-none text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-8 rounded">
                         Cancel
                     </a>
                 </div>
