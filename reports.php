@@ -105,11 +105,11 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - Expense Tracker</title>
-    <link href="https://unpkg.com/flowbite@latest/dist/flowbite.min.css" rel="stylesheet" />
+    <link href="https://unpkg.com/flowbite@4.0.2/dist/flowbite.min.css" rel="stylesheet" />
     <link href="styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   
 </head>
 <body class="bg-gray-50">
@@ -186,7 +186,7 @@ try {
 
     </main>
 
-    <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
+    <script src="https://unpkg.com/flowbite@4.0.2/dist/flowbite.bundle.js"></script>
     <script>
         // Chart data from PHP
         const monthlyData = <?= json_encode($monthlyData) ?>;

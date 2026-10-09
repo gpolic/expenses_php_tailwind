@@ -93,7 +93,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
-  <link href="https://unpkg.com/flowbite@latest/dist/flowbite.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/flowbite@4.0.2/dist/flowbite.min.css" rel="stylesheet" />
   <link href="styles.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
@@ -284,6 +284,6 @@ try {
         titleObserver.observe(pageTitle);
     }
     </script>
-  <script src="https://unpkg.com/flowbite@latest/dist/flowbite.bundle.js"></script>
+  <script src="https://unpkg.com/flowbite@4.0.2/dist/flowbite.bundle.js"></script>
 </body>
 </html>
