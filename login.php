@@ -3,8 +3,13 @@ ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_samesite', 'Strict');
 ini_set('session.cookie_secure', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 1 : 0);
 session_start();
+// Return-to page after login: only local stock UI paths (same check as auth.php).
+$next = $_GET['next'] ?? '';
+if (!is_string($next) || !preg_match('#^/stocks/[A-Za-z0-9_\-./?=&%]*$#', $next)) {
+    $next = '';
+}
 if(isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: " . ($next !== '' ? $next : "index.php"));
     exit();
 }
 ?>
@@ -13,7 +18,7 @@ if(isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Expense Tracker</title>
+    <title>Login</title>
   <link href="https://unpkg.com/flowbite@4.0.2/dist/flowbite.min.css" rel="stylesheet" />
   <link href="styles.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,8 +27,11 @@ if(isset($_SESSION['user_id'])) {
 <body class="bg-gray-50">
     <div class="min-h-screen flex items-center justify-center bg-gray-50">
         <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h1 class="text-2xl font-bold mb-6 text-center">Expense Tracker Login</h1>
+            <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
             <form method="POST" action="auth.php">
+                <?php if ($next !== ''): ?>
+                <input type="hidden" name="next" value="<?= htmlspecialchars($next, ENT_QUOTES) ?>">
+                <?php endif; ?>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
                     <input type="text" name="username" required 
