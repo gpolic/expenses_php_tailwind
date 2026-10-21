@@ -7,7 +7,7 @@ Mobile-friendly web app for tracking personal expenses, with interactive charts/
 - **Expense Tracking**: Add, edit, and delete expenses with categories
 - **2-Step Add Flow**: Pick category, then enter amount/description — designed for ~3 taps on mobile
 - **Dashboard**: Month-to-date total with % change vs. the same day range of the previous month, plus an infinite-scroll list of recent expenses
-- **Interactive Reports**: 12-month trend line, average and linear-regression trend overlays, top-10 categories bar chart
+- **Interactive Reports**: date range picker (presets: this month, last month, year to date, last year, last 12 months; or any custom range); daily or monthly expense line with trend overlay, year-over-year lines for the last 3 years with year-to-date totals and % change, categories table (all categories, scrollable) with in-cell bars, % of total, transaction count and average, 10 largest single expenses
 - **Category Management**: Add, rename, and delete categories (delete blocked while expenses are linked)
 - **Mobile-First UI**: Bottom tab bar, context-aware FAB (add expense or add category depending on current page), collapsing sticky header on dashboard and categories pages
 - **User Authentication**: Session-based login with 8h inactivity timeout, bcrypt password hashing, and CSRF protection on all state-changing requests
@@ -115,7 +115,8 @@ The Reports page provides:
 - **Monthly Trend Chart**: line chart of expenses over the last 12 completed months
 - **Average Line**: mean monthly spending
 - **Trend Analysis**: linear-regression trend line indicating spending direction
-- **Category Analysis**: bar chart of top-10 categories by total amount
+- **Category Analysis**: table of all categories with expenses in the range (scrollable): total (in-cell bar), % of period total, transaction count, average transaction
+- **Largest Expenses**: the 10 biggest single expenses in the range; tap a row to edit it
 - **Summary Cards**: averages, totals, and trend indicators
 
 ## Security
