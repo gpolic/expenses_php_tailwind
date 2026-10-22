@@ -360,12 +360,8 @@ try {
                         <?php endforeach; ?>
                     </ul>
                     <p id="catEmpty" class="hidden px-3 py-4 text-sm text-gray-500">No matching categories.</p>
-                    <div class="flex items-center justify-between gap-3 p-3 border-t border-gray-100">
+                    <div class="p-3 border-t border-gray-100">
                         <span id="catCount" class="text-sm text-gray-600"></span>
-                        <div class="flex gap-2">
-                            <button type="button" id="catCancel" class="px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">Cancel</button>
-                            <button type="button" id="catApply" class="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50">Apply</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -667,7 +663,6 @@ try {
             const button = document.getElementById('catButton');
             const panel = document.getElementById('catPanel');
             const search = document.getElementById('catSearch');
-            const applyButton = document.getElementById('catApply');
             const count = document.getElementById('catCount');
             const empty = document.getElementById('catEmpty');
             const boxes = Array.from(document.querySelectorAll('#catList input[type=checkbox]'));
@@ -678,8 +673,8 @@ try {
 
             function showCount() {
                 const checked = boxes.filter(box => box.checked).length;
-                count.textContent = checked === boxes.length ? 'All selected' : checked + ' of ' + boxes.length;
-                applyButton.disabled = checked === 0;
+                count.textContent = checked === 0 ? 'None selected – closing keeps the current filter'
+                    : checked === boxes.length ? 'All selected' : checked + ' of ' + boxes.length;
             }
 
             function filterList() {
@@ -714,27 +709,35 @@ try {
                 showCount();
             }
 
-            button.addEventListener('click', () => setOpen(panel.classList.contains('hidden')));
+            // Closing the panel applies the selection: reload only if it changed, keep the old one if none is checked
+            function close() {
+                const ids = boxes.filter(box => box.checked).map(box => box.value);
+                const changed = boxes.some((box, i) => box.checked !== initial[i]);
+                if (changed && ids.length > 0) {
+                    window.location.search = '?' + periodQuery + (ids.length === boxes.length ? '' : '&cat=' + ids.join(','));
+                    return;
+                }
+                reset();
+                setOpen(false);
+            }
+
+            button.addEventListener('click', () => {
+                if (panel.classList.contains('hidden')) setOpen(true);
+                else close();
+            });
             search.addEventListener('input', filterList);
             boxes.forEach(box => box.addEventListener('change', showCount));
             document.getElementById('catAll').addEventListener('click', () => setVisible(true));
             document.getElementById('catNone').addEventListener('click', () => setVisible(false));
-            document.getElementById('catCancel').addEventListener('click', () => {
-                reset();
-                setOpen(false);
-            });
-            applyButton.addEventListener('click', () => {
-                const ids = boxes.filter(box => box.checked).map(box => box.value);
-                window.location.search = '?' + periodQuery + (ids.length === boxes.length ? '' : '&cat=' + ids.join(','));
-            });
             document.addEventListener('mousedown', (event) => {
-                if (!wrapper.contains(event.target) && !panel.classList.contains('hidden')) {
+                if (!wrapper.contains(event.target) && !panel.classList.contains('hidden')) close();
+            });
+            document.addEventListener('keydown', (event) => {
+                // Escape discards the changes
+                if (event.key === 'Escape' && !panel.classList.contains('hidden')) {
                     reset();
                     setOpen(false);
                 }
-            });
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') setOpen(false);
             });
             showCount();
         })();
