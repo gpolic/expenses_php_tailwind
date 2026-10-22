@@ -78,36 +78,49 @@ try {
             Category: <span class="font-medium text-gray-700"><?php echo htmlspecialchars($category['category_name']); ?></span>
         </p>
         
-        <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-            <form method="POST" class="space-y-4">
+        <div class="bg-white rounded-2xl shadow-sm p-5 sm:p-6">
+            <form method="POST" class="space-y-6">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <input type="hidden" name="category" value="<?php echo $category['category_id']; ?>">
-                
-                <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
-                    <div class="flex items-center gap-2 shadow border rounded w-full py-3 px-3 bg-white focus-within:ring-2 focus-within:ring-blue-500">
-                        <span class="text-2xl font-semibold leading-none text-gray-400 select-none">&euro;</span>
+
+                <div class="flex items-center gap-3">
+                    <label class="flex flex-1 min-w-0 items-baseline gap-2 border-b-2 border-gray-200 pb-2 focus-within:border-blue-500 transition-colors">
+                        <span class="sr-only">Amount</span>
+                        <span class="text-3xl font-semibold text-gray-400 select-none">&euro;</span>
                         <input type="number"
                                step="0.01"
+                               min="0.01"
                                name="amount"
+                               id="amount"
                                required
                                inputmode="decimal"
                                enterkeyhint="done"
-                               class="flex-1 min-w-0 border-0 bg-transparent p-0 text-2xl font-semibold leading-none text-gray-800 focus:outline-none focus:ring-0"
+                               placeholder="0.00"
+                               class="flex-1 min-w-0 border-0 bg-transparent p-0 text-4xl font-bold text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-0"
                                autofocus>
-                    </div>
+                    </label>
+                    <button type="submit"
+                            id="save-btn"
+                            aria-label="Save"
+                            disabled
+                            class="shrink-0 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700 active:scale-95 transition disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </button>
                 </div>
 
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                    <input type="text" 
-                           name="description" 
-                           id="description" 
-                           class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                    <label for="description" class="sr-only">Description</label>
+                    <input type="text"
+                           name="description"
+                           id="description"
+                           placeholder="Description (optional)"
+                           class="w-full rounded-xl border-0 bg-gray-100 py-3 px-4 text-gray-700 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Quick Select Description</label>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Quick select</p>
                     <div class="flex flex-wrap gap-2">
                         <?php foreach($topDescriptions as $desc) { ?>
                             <button type="button"
@@ -117,19 +130,20 @@ try {
                             </button>
                         <?php } ?>
                     </div>
-                </div>              
-              
-                <div class="flex items-center justify-between pt-4">
-                    <button type="submit" 
-                            class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded text-sm sm:text-base">
-                        Save
-                    </button>
                 </div>
             </form>
         </div>
     </main>
 
     <script>
+    var amountInput = document.getElementById('amount');
+    var saveBtn = document.getElementById('save-btn');
+    function updateSaveBtn() {
+        saveBtn.disabled = !(parseFloat(amountInput.value) > 0);
+    }
+    amountInput.addEventListener('input', updateSaveBtn);
+    updateSaveBtn();
+
     document.querySelectorAll('.desc-chip').forEach(function (chip) {
         chip.addEventListener('click', function () {
             document.getElementById('description').value = chip.dataset.desc;
